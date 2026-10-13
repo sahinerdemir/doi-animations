@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { ANIMATION_SPECS, ScreenAnimationSpec } from "@/data/animationSpecs";
 import {
-  Clock,
   PanelRightClose,
   PanelRightOpen,
   Sliders,
@@ -60,25 +59,16 @@ export function AnimationDetailsPanel({
 
   return (
     <aside className="w-[340px] sm:w-[360px] shrink-0 h-screen bg-[#0C0D12] border-l border-zinc-800/80 flex flex-col z-30 select-none overflow-hidden">
-      {/* 1. Sade Header: Ekran Adı & Toplam Süre */}
+      {/* 1. Sade Header: Ekran Başlığı Guide */}
       <div className="p-4 border-b border-zinc-800/80 flex items-center justify-between gap-3 bg-zinc-950/60">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-white tracking-wide uppercase">
-              Animasyon Özellikleri
-            </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#EF4823]/15 text-[#EF4823] border border-[#EF4823]/30 truncate">
-              {spec.title}
-            </span>
-          </div>
-
-          {spec.totalDurationMs && (
-            <div className="flex items-center gap-1.5 mt-1.5 text-[11px] text-zinc-400 font-mono">
-              <Clock className="w-3 h-3 text-[#EF4823]" />
-              <span>Toplam Süre:</span>
-              <span className="text-white font-medium">{spec.totalDurationMs}</span>
-            </div>
-          )}
+          <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
+            {spec.title} Animation Guide
+          </h3>
+          <p className="text-[11px] text-zinc-400 mt-0.5 flex items-center gap-1.5 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#EF4823]" />
+            <span>Animasyon Özellikleri & Zamanlamalar</span>
+          </p>
         </div>
 
         <button
