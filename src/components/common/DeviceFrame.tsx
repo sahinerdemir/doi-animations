@@ -47,11 +47,6 @@ export function DeviceFrame({
     <div className="relative flex-1 h-screen bg-[#0A0B0E] flex items-center justify-center overflow-auto p-3 sm:p-5 select-none">
       {/* Top-Right Control Buttons & Dimension Indicator */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-        {/* Exact Figma Ratio Indicator */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 backdrop-blur-md text-xs font-mono text-zinc-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#EF4823]" />
-          <span>394 × 853 px</span>
-        </div>
 
         {/* Toggle Compare Mode (if reference image available) */}
         {referenceImage && (
