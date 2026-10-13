@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SplashScreen } from "@/components/splash/SplashScreen";
 import { LoginScreen } from "@/components/screens/LoginScreen";
 import { ForgotPasswordScreen } from "@/components/screens/ForgotPasswordScreen";
@@ -37,6 +37,28 @@ const REFERENCE_IMAGES: Record<string, string> = {
 export default function HomePage() {
   const [selectedPageId, setSelectedPageId] = useState<string>("splash-screen");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFs = Boolean(
+        document.fullscreenElement ||
+          (document as unknown as { webkitFullscreenElement?: Element })
+            .webkitFullscreenElement
+      );
+      setIsFullscreen(isFs);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+    };
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -167,14 +189,16 @@ export default function HomePage() {
 
   return (
     <div className="w-screen h-screen flex overflow-hidden bg-[#0A0B0E]">
-      {/* 1. Left Vertical Site Tree Sidebar */}
-      <SidebarTree
-        selectedPageId={selectedPageId}
-        onSelectPage={(page: PageNode) => {
-          setSelectedPageId(page.id);
-          showToast(`'${page.title}' ekranına geçildi.`);
-        }}
-      />
+      {/* 1. Left Vertical Site Tree Sidebar (Hidden in fullscreen) */}
+      {!isFullscreen && (
+        <SidebarTree
+          selectedPageId={selectedPageId}
+          onSelectPage={(page: PageNode) => {
+            setSelectedPageId(page.id);
+            showToast(`'${page.title}' ekranına geçildi.`);
+          }}
+        />
+      )}
 
       {/* 2. Center Viewport with Scaled Mockup & Controls */}
       <DeviceFrame
@@ -195,8 +219,10 @@ export default function HomePage() {
         </AnimatePresence>
       </DeviceFrame>
 
-      {/* 3. Right Animation Technical Details Panel */}
-      <AnimationDetailsPanel selectedPageId={selectedPageId} />
+      {/* 3. Right Animation Technical Details Panel (Hidden in fullscreen) */}
+      {!isFullscreen && (
+        <AnimationDetailsPanel selectedPageId={selectedPageId} />
+      )}
 
       {/* Floating Action Toast Notification (Bottom-center) */}
       {toastMessage && (
