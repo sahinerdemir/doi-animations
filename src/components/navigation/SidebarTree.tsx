@@ -35,14 +35,32 @@ export function SidebarTree({ selectedPageId, onSelectPage }: SidebarTreeProps) 
     }));
   };
 
-  const getStatusIcon = (status: PageNode["status"]) => {
+  const getStatusIcon = (status: PageNode["status"], isSelected = false) => {
     switch (status) {
       case "completed":
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />;
+        return (
+          <CheckCircle2
+            className={`w-3.5 h-3.5 shrink-0 ${
+              isSelected ? "text-white" : "text-emerald-400"
+            }`}
+          />
+        );
       case "in_progress":
-        return <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />;
+        return (
+          <Clock
+            className={`w-3.5 h-3.5 shrink-0 ${
+              isSelected ? "text-white" : "text-amber-400"
+            }`}
+          />
+        );
       default:
-        return <Circle className="w-3 h-3 text-zinc-600 shrink-0" />;
+        return (
+          <Circle
+            className={`w-3 h-3 shrink-0 ${
+              isSelected ? "text-white/70" : "text-zinc-600"
+            }`}
+          />
+        );
     }
   };
 
@@ -159,29 +177,8 @@ export function SidebarTree({ selectedPageId, onSelectPage }: SidebarTreeProps) 
                           <span className="truncate">{page.title}</span>
                         </div>
 
-                        <div className="flex items-center gap-1.5 shrink-0 ml-1">
-                          {isSelected ? (
-                            <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded text-white font-medium">
-                              Aktif
-                            </span>
-                          ) : (
-                            <>
-                              {page.badge && (
-                                <span
-                                  className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${
-                                    page.status === "completed"
-                                      ? "bg-emerald-950/80 text-emerald-400 border border-emerald-800/40"
-                                      : page.status === "in_progress"
-                                      ? "bg-amber-950/80 text-amber-400 border border-amber-800/40"
-                                      : "bg-zinc-800/60 text-zinc-500"
-                                  }`}
-                                >
-                                  {page.badge}
-                                </span>
-                              )}
-                              {getStatusIcon(page.status)}
-                            </>
-                          )}
+                        <div className="flex items-center shrink-0 ml-1.5">
+                          {getStatusIcon(page.status, isSelected)}
                         </div>
                       </button>
                     );
