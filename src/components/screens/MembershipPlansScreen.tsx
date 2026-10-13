@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { StatusBar } from "@/components/splash/StatusBar";
-import { ChevronLeft, ArrowRight } from "lucide-react";
 import { ArrowRightIcon } from "@/components/splash/SplashScreen";
 import { motion } from "framer-motion";
 
@@ -21,44 +20,57 @@ export function MembershipPlansScreen({
   const [selectedPlan, setSelectedPlan] = useState<"annual" | "monthly">("annual");
 
   return (
-    <div className="relative w-full h-full bg-black text-white flex flex-col justify-between overflow-hidden select-none font-sans">
-      {/* 1. Status Bar */}
-      <StatusBar time="9:41" className="pt-2 z-20 text-white" />
+    <div className="relative w-full h-full bg-[#111111] text-white flex flex-col justify-between overflow-hidden select-none font-sans">
+      {/* 1. Status Bar (30px reserved placeholder) */}
+      <StatusBar className="z-20 text-white" />
 
-      {/* 2. Mosaic Blurry Background from Figma */}
-      <div className="absolute inset-0 z-0">
+      {/* 2. Mosaic Blurred Background (Visible covers with rich depth, zero baked-in text) */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
-          src="/images/figma-refs/ref-membership-plans.png"
+          src="/images/figma-refs/mosaic-background-clean.png"
           alt="DOİ Kütüphane Arşivi"
           fill
           priority
-          className="object-cover opacity-60 filter blur-[2px]"
+          sizes="394px"
+          className="object-cover filter blur-[7.5px] scale-110 opacity-75"
         />
-        <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" />
+        {/* Figma Exact Gradient Overlay: Book covers remain richly visible through soft dark vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#111111]/30 via-[#111111]/60 via-45% to-[#111111]/85 to-85%" />
       </div>
 
       {/* 3. Top Navigation */}
-      <div className="px-6 pt-5 pb-2 flex items-center justify-between z-20">
+      <div className="px-5 pt-1.5 pb-2 flex items-center justify-between z-20">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-white hover:opacity-70 transition-opacity"
+          className="flex items-center gap-1.5 text-[14px] font-medium tracking-wide text-white hover:opacity-75 transition-opacity active:scale-95 cursor-pointer"
         >
-          <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
           <span>GERİ</span>
         </button>
       </div>
 
-      {/* 4. Center Content: Headline & Side-by-Side Plan Cards */}
-      <div className="flex-1 px-6 pt-1 flex flex-col justify-center text-center z-10 -mt-4">
-        {/* Title & Subtitle */}
-        <h1 className="text-[28px] sm:text-[30px] font-bold leading-[1.2] text-white tracking-tight mb-2">
+      {/* 4. Center Content: Headline, Subtitle, Plan Cards & Cancel Notice */}
+      <div className="flex-1 px-4 flex flex-col justify-center items-center text-center z-10 -mt-2">
+        {/* Title */}
+        <h1 className="text-[28px] sm:text-[30px] font-normal leading-[1.2] text-white tracking-tight">
           Senin için en uygun
           <br />
           üyeliği seç!
         </h1>
 
-        <p className="text-xs text-white/80 leading-relaxed max-w-[290px] mx-auto mb-6">
+        {/* Subtitle */}
+        <p className="text-[13px] sm:text-[14px] font-medium leading-[1.3] text-white/80 max-w-[280px] mx-auto mt-3">
           E-Kitaplar, Podcastler, Belgeseller..
           <br />
           DOİ dünyasından sınırsızca faydalanmak için
@@ -66,66 +78,88 @@ export function MembershipPlansScreen({
           sana en uygun paketi hemen seç!
         </p>
 
-        {/* Side-by-Side 2 Cards (Exact Figma Layout) */}
-        <div className="grid grid-cols-2 gap-3 max-w-[340px] mx-auto w-full">
+        {/* Side-by-Side Plan Cards Container */}
+        <div className="w-full max-w-[330px] flex items-center justify-center gap-2.5 mt-6">
           {/* Monthly Card */}
           <motion.div
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedPlan("monthly")}
-            className={`rounded-[26px] p-4 text-left flex flex-col justify-between min-h-[175px] transition-all duration-200 cursor-pointer ${
+            className={`flex-1 rounded-[18px] text-left flex flex-col justify-between transition-all duration-200 cursor-pointer ${
               selectedPlan === "monthly"
-                ? "bg-black/90 border-[3px] border-[#EF4823] shadow-xl"
-                : "bg-black/60 border border-white/10 hover:border-white/20"
+                ? "py-7 px-4.5 bg-black/60 border-[4px] border-[#EF4823] shadow-2xl shadow-[#EF4823]/25 backdrop-blur-md"
+                : "py-5 px-4 bg-black/40 border border-white/10 hover:border-white/20 backdrop-blur-md"
             }`}
           >
             <div>
-              <h4 className="text-base font-medium text-white mb-1.5">Aylık</h4>
-              <div className="text-2xl font-bold text-white font-sans flex items-baseline">
-                ₺69 <span className="text-xs font-normal text-white/70 ml-1">/ay</span>
+              <h4 className="text-[18px] sm:text-[20px] font-medium text-white">Aylık</h4>
+              <div
+                className={`text-[32px] sm:text-[34px] font-medium font-sans flex items-baseline gap-1 mt-2 leading-none ${
+                  selectedPlan === "monthly" ? "text-[#EF4823]" : "text-white"
+                }`}
+              >
+                <span>₺69</span>
+                <span
+                  className={`text-[16px] sm:text-[18px] font-medium ${
+                    selectedPlan === "monthly" ? "text-[#EF4823]" : "text-white"
+                  }`}
+                >
+                  /ay
+                </span>
               </div>
             </div>
-            <p className="text-[11px] leading-snug text-white/70">
+            <p className="text-[12px] sm:text-[13px] leading-[1.25] text-[#A4A4A4] mt-4">
               Aylık olarak tanımladığın kredi kartından çekilir.
             </p>
           </motion.div>
 
           {/* Annual Card (Selected by default) */}
           <motion.div
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedPlan("annual")}
-            className={`rounded-[26px] p-4 text-left flex flex-col justify-between min-h-[175px] transition-all duration-200 cursor-pointer ${
+            className={`flex-1 rounded-[18px] text-left flex flex-col justify-between transition-all duration-200 cursor-pointer ${
               selectedPlan === "annual"
-                ? "bg-black/90 border-[3px] border-[#EF4823] shadow-xl shadow-[#EF4823]/25"
-                : "bg-black/60 border border-white/10 hover:border-white/20"
+                ? "py-7 px-4.5 bg-black/60 border-[4px] border-[#EF4823] shadow-2xl shadow-[#EF4823]/25 backdrop-blur-md"
+                : "py-5 px-4 bg-black/40 border border-white/10 hover:border-white/20 backdrop-blur-md"
             }`}
           >
             <div>
-              <h4 className="text-base font-medium text-white mb-1.5">Yıllık</h4>
-              <div className="text-2xl font-bold text-[#EF4823] font-sans flex items-baseline">
-                ₺690 <span className="text-xs font-normal text-white/70 ml-1">/ay</span>
+              <h4 className="text-[18px] sm:text-[20px] font-medium text-white">Yıllık</h4>
+              <div
+                className={`text-[32px] sm:text-[34px] font-medium font-sans flex items-baseline gap-1 mt-2 leading-none ${
+                  selectedPlan === "annual" ? "text-[#EF4823]" : "text-white"
+                }`}
+              >
+                <span>₺690</span>
+                <span
+                  className={`text-[16px] sm:text-[18px] font-medium ${
+                    selectedPlan === "annual" ? "text-[#EF4823]" : "text-white"
+                  }`}
+                >
+                  /ay
+                </span>
               </div>
             </div>
-            <div className="text-[11px] leading-snug text-white/90">
+            <div className="text-[12px] sm:text-[13px] leading-[1.25] mt-4">
               <strong className="text-white block font-bold">2 Ay Bizden!</strong>
-              <span className="text-white/70">Tek ödeme olarak alınır.</span>
+              <span className="text-[#A4A4A4]">Tek ödeme olarak alınır.</span>
             </div>
           </motion.div>
         </div>
 
         {/* Notice */}
-        <p className="text-[11px] text-white/70 mt-5">
+        <p className="text-[12px] font-medium text-white/80 mt-5">
           * Üyeliğini istediğin zaman iptal edebilirsin!
         </p>
       </div>
 
-      {/* 5. Bottom Buttons (Exact Figma Style) */}
-      <div className="w-full px-8 pb-10 flex flex-col gap-3 z-10">
+      {/* 5. Bottom Buttons (Exact Figma Style - 330px max width) */}
+      <div className="w-full max-w-[330px] mx-auto px-0 pb-9 flex flex-col gap-2.5 z-10">
         {/* Button 1: 7 günlük denemeyi başlat */}
         <motion.button
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={onSuccess}
-          className="w-full h-14 rounded-full bg-[#EF4823] hover:bg-[#ff5530] text-white flex items-center justify-between px-8 text-base font-semibold shadow-xl shadow-[#EF4823]/30 transition-all cursor-pointer"
+          className="w-full h-[54px] rounded-full bg-[#EF4823] hover:bg-[#ff5530] text-white flex items-center justify-between px-7 text-[16px] font-medium shadow-xl shadow-[#EF4823]/30 transition-all cursor-pointer"
         >
           <span>7 günlük denemeyi başlat</span>
           <ArrowRightIcon className="w-5 h-5 text-white" />
@@ -136,7 +170,7 @@ export function MembershipPlansScreen({
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={onSkip}
-          className="w-full h-14 rounded-full bg-black/60 hover:bg-black/80 border border-white/20 text-white flex items-center justify-between px-8 text-base font-semibold backdrop-blur-md transition-all cursor-pointer"
+          className="w-full h-[54px] rounded-full bg-black/40 hover:bg-black/60 border border-white/20 text-white flex items-center justify-between px-7 text-[16px] font-medium backdrop-blur-md transition-all cursor-pointer"
         >
           <span>Üye olmadan devam et</span>
           <ArrowRightIcon className="w-5 h-5 text-white" />
