@@ -6,8 +6,6 @@ import {
   Maximize2,
   Minimize2,
   SplitSquareVertical,
-  Smartphone,
-  Expand,
 } from "lucide-react";
 
 interface DeviceFrameProps {
@@ -23,7 +21,6 @@ export function DeviceFrame({
 }: DeviceFrameProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isCompareMode, setIsCompareMode] = useState(false);
-  const [fillMode, setFillMode] = useState<"fill" | "fit">("fill");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -91,37 +88,11 @@ export function DeviceFrame({
     <div
       ref={containerRef}
       className={`relative flex-1 h-screen bg-[#0A0B0E] flex items-center justify-center overflow-auto select-none transition-all duration-300 ${
-        isFullscreen ? "p-0 bg-black" : "p-3 sm:p-5"
+        isFullscreen ? "py-[60px] px-4 bg-black" : "p-3 sm:p-5"
       }`}
     >
       {/* Top-Right Control Buttons */}
-      <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
-        {/* Fullscreen Width / Fit Toggle (Only shown in Fullscreen mode without compare) */}
-        {isFullscreen && !isCompareMode && (
-          <button
-            type="button"
-            onClick={() => setFillMode(fillMode === "fit" ? "fill" : "fit")}
-            title={
-              fillMode === "fit"
-                ? "Ekranı Doldur (Genişlet)"
-                : "Telefon Oranına Dön (394 × 853)"
-            }
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700/80 backdrop-blur-md shadow-xl transition-all hover:scale-105 active:scale-95 text-xs font-medium cursor-pointer"
-          >
-            {fillMode === "fit" ? (
-              <>
-                <Expand className="w-3.5 h-3.5 text-[#EF4823]" />
-                <span className="hidden sm:inline">Ekranı Doldur</span>
-              </>
-            ) : (
-              <>
-                <Smartphone className="w-3.5 h-3.5 text-[#EF4823]" />
-                <span className="hidden sm:inline">Telefon Oranı</span>
-              </>
-            )}
-          </button>
-        )}
-
+      <div className="absolute top-5 right-6 z-40 flex items-center gap-2">
         {/* Toggle Compare Mode (if reference image available) */}
         {referenceImage && (
           <button
@@ -157,12 +128,10 @@ export function DeviceFrame({
       {!isCompareMode ? (
         /* Single Centered Mockup Frame */
         <div
-          className={`relative overflow-hidden bg-black flex items-center justify-center transition-all duration-300 ${
+          className={`relative overflow-hidden bg-black flex items-center justify-center transition-all duration-300 aspect-[394/853] w-auto max-w-full rounded-[40px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/15 border-[3px] border-zinc-800/90 ${
             isFullscreen
-              ? fillMode === "fill"
-                ? "w-full h-full max-w-xl md:max-w-2xl rounded-none sm:rounded-[24px] border-0 sm:border border-zinc-800/80 shadow-2xl"
-                : "h-screen max-h-screen aspect-[394/853] w-auto max-w-full rounded-none sm:rounded-[36px] border-0 sm:border-[2px] border-zinc-800/80 shadow-2xl"
-              : "h-[min(853px,calc(100vh-2.5rem))] aspect-[394/853] w-auto max-w-full rounded-[40px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/15 border-[3px] border-zinc-800/90"
+              ? "h-[calc(100vh-120px)] max-h-[calc(100vh-120px)]"
+              : "h-[min(853px,calc(100vh-2.5rem))]"
           }`}
         >
           {/* Screen Canvas */}
@@ -172,7 +141,7 @@ export function DeviceFrame({
         </div>
       ) : (
         /* Side-by-Side Comparison Mode */
-        <div className="flex flex-wrap items-center justify-center gap-6 max-w-7xl h-full py-4">
+        <div className="flex flex-wrap items-center justify-center gap-6 max-w-7xl h-full py-2">
           {/* Left: Code implementation */}
           <div className="flex flex-col items-center h-full max-h-screen">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-2 bg-emerald-950/60 border border-emerald-800/40 px-3 py-1 rounded-full">
@@ -181,7 +150,7 @@ export function DeviceFrame({
             <div
               className={`relative ${
                 isFullscreen
-                  ? "h-[calc(100vh-4rem)] rounded-[28px]"
+                  ? "h-[calc(100vh-120px-2.5rem)] rounded-[32px]"
                   : "h-[min(760px,calc(100vh-6rem))] rounded-[40px]"
               } aspect-[394/853] w-auto border-[3px] border-zinc-800 shadow-2xl overflow-hidden bg-black ring-1 ring-white/10`}
             >
@@ -199,7 +168,7 @@ export function DeviceFrame({
             <div
               className={`relative ${
                 isFullscreen
-                  ? "h-[calc(100vh-4rem)] rounded-[28px]"
+                  ? "h-[calc(100vh-120px-2.5rem)] rounded-[32px]"
                   : "h-[min(760px,calc(100vh-6rem))] rounded-[40px]"
               } aspect-[394/853] w-auto border-[3px] border-zinc-800 shadow-2xl overflow-hidden bg-black ring-1 ring-white/10`}
             >
