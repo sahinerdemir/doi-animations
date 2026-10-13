@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { StatusBar } from "@/components/splash/StatusBar";
 import {
   ChevronLeft,
@@ -38,16 +38,13 @@ export function InterestedContentTypesScreen({
   onNext,
   onSkip,
 }: InterestedContentTypesScreenProps) {
-  // Pre-selected from Figma / screenshot reference
-  const [selectedIds, setSelectedIds] = useState<string[]>([
-    "sesli-kitaplar",
-    "yazarlar",
-    "radyo-tiyatrolari",
-  ]);
+  // Seçili olanlar (default olarak boş başlar, tıklandıkça turuncu olur, tekrar tıklanınca beyaz olur)
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  // Carousel offset: index 3 is "Yazarlar" (centered initially as in screenshot)
+  // Carousel offset: 3 numaralı indeks ("Yazarlar") başlangıçta merkezdedir (görseldeki gibi)
   const [offset, setOffset] = useState<number>(3);
   const isDraggingRef = useRef(false);
+  const hasDraggedRef = useRef(false);
   const startYRef = useRef(0);
   const startOffsetRef = useRef(3);
   const lastYRef = useRef(0);
@@ -55,6 +52,7 @@ export function InterestedContentTypesScreen({
   const velocityRef = useRef(0);
   const animationControlsRef = useRef<{ stop: () => void } | null>(null);
 
+  // Kutuya tıklanınca: Seçili değilse turuncu yap, turuncu ise varsayılan beyaza çevir
   const toggleItem = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -63,12 +61,13 @@ export function InterestedContentTypesScreen({
 
   const isComplete = selectedIds.length >= 3;
 
-  // Pointer drag handling for 3D wheel rotation
+  // Dikey sürükleme (Drag / Swipe) yönetimi
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (animationControlsRef.current) {
       animationControlsRef.current.stop();
     }
     isDraggingRef.current = true;
+    hasDraggedRef.current = false;
     startYRef.current = e.clientY;
     startOffsetRef.current = offset;
     lastYRef.current = e.clientY;
@@ -84,13 +83,17 @@ export function InterestedContentTypesScreen({
     const now = performance.now();
     const dt = Math.max(1, now - lastTimeRef.current);
     const dy = e.clientY - lastYRef.current;
-    velocityRef.current = dy / dt; // px per ms
+    velocityRef.current = dy / dt; // px / ms
     lastYRef.current = e.clientY;
     lastTimeRef.current = now;
 
     const totalDy = e.clientY - startYRef.current;
-    // 70px drag corresponds to 1 carousel notch
-    const newOffset = startOffsetRef.current - totalDy / 70;
+    if (Math.abs(totalDy) > 6) {
+      hasDraggedRef.current = true;
+    }
+
+    // Her 50px dikey sürükleme 1 kart adımı ilerletir
+    const newOffset = startOffsetRef.current - totalDy / 50;
     setOffset(newOffset);
   };
 
@@ -101,20 +104,22 @@ export function InterestedContentTypesScreen({
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {}
 
-    // Snap with velocity inertia to nearest notch
-    const momentum = velocityRef.current * 70;
-    const target = Math.round(offset - momentum / 70);
+    if (hasDraggedRef.current) {
+      // Sürükleme bittiğinde atalet hızıyla en yakın karta yay (spring) ile oturur
+      const momentum = velocityRef.current * 65;
+      const target = Math.round(offset - momentum / 50);
 
-    animationControlsRef.current = animate(offset, target, {
-      type: "spring",
-      stiffness: 320,
-      damping: 28,
-      mass: 0.8,
-      onUpdate: (latest) => setOffset(latest),
-    });
+      animationControlsRef.current = animate(offset, target, {
+        type: "spring",
+        stiffness: 340,
+        damping: 28,
+        mass: 0.8,
+        onUpdate: (latest) => setOffset(latest),
+      });
+    }
   };
 
-  // Mouse wheel handling
+  // Fare tekerleğiyle (wheel) yukarı-aşağı çevirme
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (animationControlsRef.current) {
       animationControlsRef.current.stop();
@@ -124,17 +129,16 @@ export function InterestedContentTypesScreen({
 
     animationControlsRef.current = animate(offset, target, {
       type: "spring",
-      stiffness: 340,
+      stiffness: 350,
       damping: 28,
       mass: 0.8,
       onUpdate: (latest) => setOffset(latest),
     });
   };
 
-  // Click on a pill: toggle selection & snap to center if clicked off-center
+  // Karta tıklandığında: Seçimi değiştir (turuncu <-> beyaz) ve kartı merkeze kaydır
   const handleCardClick = (k: number, id: string) => {
-    const dragDistance = Math.abs(offset - startOffsetRef.current);
-    if (dragDistance > 0.12) return; // Ignore clicks if it was a drag gesture
+    if (hasDraggedRef.current) return;
 
     toggleItem(id);
 
@@ -143,16 +147,16 @@ export function InterestedContentTypesScreen({
     }
     animationControlsRef.current = animate(offset, k, {
       type: "spring",
-      stiffness: 340,
+      stiffness: 360,
       damping: 28,
       mass: 0.8,
       onUpdate: (latest) => setOffset(latest),
     });
   };
 
-  // Calculate 3D cylindrical drum positions for visible items
+  // Kartların dikey katmanlı düz yerleşimi (Bükülme yok, tamamen ön yüzey düz, arkaya doğru scale & opacity ile süzülüş)
   const N = CONTENT_TYPES.length;
-  const visibleRange = 3; // -3 to +3 (7 visible items in total)
+  const visibleRange = 3; // Merkez + üstte 3 + altta 3 kart (toplam 7 kart)
   const centerFloor = Math.floor(offset);
   const cards = [];
 
@@ -160,26 +164,33 @@ export function InterestedContentTypesScreen({
     const itemIndex = ((k % N) + N) % N;
     const item = CONTENT_TYPES[itemIndex];
     const delta = k - offset;
-    const stepAngle = 22.5; // degrees per notch
-    const alpha = delta * stepAngle;
-    if (Math.abs(alpha) > 85) continue;
+    const absD = Math.abs(delta);
+    if (absD > 3.6) continue;
 
-    const rad = (alpha * Math.PI) / 180;
-    const R = 210; // radius of cylindrical drum
-    const y = R * Math.sin(rad);
-    const z = -R * (1 - Math.cos(rad));
-    const rotateX = -alpha;
-    const scale = Math.max(0.62, Math.pow(Math.cos(rad), 0.55));
-    const opacity = Math.max(0, Math.pow(Math.cos(rad), 1.7));
-    const zIndex = Math.round(100 * Math.cos(rad));
+    // Dikey kaydırma konumu (görseldeki katman aralıkları ~46px)
+    const y = delta * 46;
+
+    // Boyut küçülmesi (arkaya doğru derinlik hissi)
+    const scale = Math.max(0.68, 1 - absD * 0.08);
+
+    // Görseldeki gibi arkaya doğru azalan opacity
+    let opacity = 0;
+    if (absD < 1) {
+      opacity = 1 - absD * 0.14;
+    } else if (absD < 2) {
+      opacity = 0.86 - (absD - 1) * 0.28;
+    } else if (absD < 3.5) {
+      opacity = Math.max(0, 0.58 - (absD - 2) * 0.24);
+    }
+
+    // Merkezdeki kart daima en üstte (z: 50), uzaklaştıkça arkaya girer
+    const zIndex = Math.max(1, 50 - Math.round(absD * 10));
     const isSelected = selectedIds.includes(item.id);
 
     cards.push({
       k,
       item,
       y,
-      z,
-      rotateX,
       scale,
       opacity,
       zIndex,
@@ -225,15 +236,14 @@ export function InterestedContentTypesScreen({
         </p>
       </div>
 
-      {/* 4. 3D Cylindrical Vertical Wheel Carousel */}
+      {/* 4. Katmanlı Dikey Carousel Çarkı (Kutular bükülmez, ön yüzleri düz bakar, arkaya doğru küçülüp solar) */}
       <div
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onWheel={handleWheel}
-        className="relative flex-1 w-full flex items-center justify-center overflow-visible select-none cursor-grab active:cursor-grabbing touch-none z-10 -my-3"
-        style={{ perspective: 1200 }}
+        className="relative flex-1 w-full flex items-center justify-center select-none cursor-grab active:cursor-grabbing touch-none z-10 my-auto min-h-[380px]"
       >
         {cards.map((card) => {
           const IconComp = card.item.icon;
@@ -244,17 +254,19 @@ export function InterestedContentTypesScreen({
               onClick={() => handleCardClick(card.k, card.item.id)}
               style={{
                 position: "absolute",
-                transform: `translate3d(0, ${card.y}px, ${card.z}px) rotateX(${card.rotateX}deg) scale(${card.scale})`,
+                top: "50%",
+                left: "50%",
+                transform: `translate3d(-50%, calc(-50% + ${card.y}px), 0) scale(${card.scale})`,
                 opacity: card.opacity,
                 zIndex: card.zIndex,
                 transformOrigin: "center center",
               }}
-              className="w-[305px] max-w-[86%] cursor-pointer transition-[background-color,border-color,box-shadow] duration-200"
+              className="w-[310px] max-w-[88%] cursor-pointer transition-[box-shadow,background-color] duration-150"
             >
               <div
-                className={`w-full h-16 rounded-full px-6 flex items-center gap-4 transition-all duration-200 select-none ${
+                className={`w-full h-[60px] sm:h-[64px] rounded-full px-6 flex items-center gap-4 select-none transition-all duration-200 ${
                   card.isSelected
-                    ? "bg-[#EF4823] text-white shadow-[0_8px_25px_rgba(239,72,35,0.32)]"
+                    ? "bg-[#EF4823] text-white shadow-[0_8px_25px_rgba(239,72,35,0.35)]"
                     : "bg-white text-[#111111] shadow-[0_4px_18px_rgba(0,0,0,0.06)] border border-black/[0.04] hover:bg-white/95"
                 }`}
               >
