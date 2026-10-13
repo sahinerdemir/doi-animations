@@ -242,8 +242,8 @@ export function AreasOfInterestScreen({
         </div>
       </div>
 
-      {/* 3. Headline Area */}
-      <div className="px-6 pt-1 pb-3 text-center z-20 shrink-0">
+      {/* 3. Headline Area (Üstüne 30px boşluk eklendi) */}
+      <div className="px-6 pt-[30px] pb-3 text-center z-20 shrink-0">
         <h1 className="text-[28px] sm:text-[30px] font-normal leading-[1.2] text-[#111111] tracking-tight">
           İlgilendiğin alanlar
           <br />
