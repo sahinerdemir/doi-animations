@@ -54,7 +54,7 @@ export function PersonalizationScreen({ onComplete }: PersonalizationScreenProps
       {/* 2. Görseldeki gibi net, belirgin ve canlı mozaik kapak arka planı */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
-          src="/images/figma-refs/ref-personalization.png"
+          src="/images/figma-refs/mosaic-background-clean.png"
           alt="DOİ Kütüphane Arşivi"
           fill
           priority
