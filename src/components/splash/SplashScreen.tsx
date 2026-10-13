@@ -36,7 +36,7 @@ export function SplashScreen({
 }: SplashScreenProps) {
   return (
     <div
-      className={`relative w-full max-w-[394px] h-[852px] max-h-[100dvh] bg-[#EF4823] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans rounded-none sm:rounded-[40px] shadow-2xl transition-all ${className}`}
+      className={`relative w-full h-full bg-[#EF4823] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans ${className}`}
     >
       {/* 1. Status Bar */}
       {showStatusBar && <StatusBar time="9:41" className="pt-2" />}
