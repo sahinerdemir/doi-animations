@@ -15,6 +15,7 @@ import { RegisterKonyaliStep5Screen } from "@/components/screens/RegisterKonyali
 import { MembershipPlansScreen } from "@/components/screens/MembershipPlansScreen";
 import { DeviceFrame } from "@/components/common/DeviceFrame";
 import { SidebarTree } from "@/components/navigation/SidebarTree";
+import { AnimationDetailsPanel } from "@/components/panels/AnimationDetailsPanel";
 import { PageNode } from "@/types/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -175,7 +176,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* 2. Center Viewport with Scaled Mockup & Top-Right Fullscreen / Compare Controls */}
+      {/* 2. Center Viewport with Scaled Mockup & Controls */}
       <DeviceFrame
         referenceImage={REFERENCE_IMAGES[selectedPageId]}
         pageTitle={selectedPageId}
@@ -193,6 +194,9 @@ export default function HomePage() {
           </motion.div>
         </AnimatePresence>
       </DeviceFrame>
+
+      {/* 3. Right Animation Technical Details Panel */}
+      <AnimationDetailsPanel selectedPageId={selectedPageId} />
 
       {/* Floating Action Toast Notification */}
       {toastMessage && (
