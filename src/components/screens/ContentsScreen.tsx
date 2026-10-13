@@ -77,7 +77,7 @@ export function ContentsScreen({ onBack, onNext, onSkip }: ContentsScreenProps) 
       <StatusBar time="9:41" className="pt-2 z-20" />
 
       {/* 2. Top Navigation */}
-      <div className="px-6 py-2 flex items-center justify-between z-20">
+      <div className="px-6 pt-5 pb-2 flex items-center justify-between z-20">
         <button
           type="button"
           onClick={onBack}

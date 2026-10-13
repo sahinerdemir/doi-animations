@@ -88,11 +88,6 @@ export function DeviceFrame({
       {!isCompareMode ? (
         /* Single Centered Mockup Frame: Exactly 394 x 853 Aspect Ratio */
         <div className="relative h-[min(853px,calc(100vh-2.5rem))] aspect-[394/853] w-auto max-w-full rounded-[40px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/15 border-[3px] border-zinc-800/90 overflow-hidden bg-black flex items-center justify-center transition-all duration-200">
-          {/* Dynamic Island Pill (iPhone style, matching 394x853 screen) */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 pointer-events-none flex items-center justify-end pr-2.5 shadow-sm">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#121623] border border-zinc-800/80" />
-          </div>
-
           {/* Screen Canvas (Exact 394x853 Canvas) */}
           <div className="w-full h-full relative overflow-hidden bg-black">
             {children}

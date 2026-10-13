@@ -50,7 +50,7 @@ export function ForgotPasswordScreen({ onBack, onSuccess }: ForgotPasswordScreen
       <StatusBar time="9:41" className="pt-2 z-20" />
 
       {/* 2. Top Nav */}
-      <div className="px-6 py-2 flex items-center justify-between z-20 relative">
+      <div className="px-6 pt-5 pb-2 flex items-center justify-between z-20 relative">
         <button
           type="button"
           onClick={() => {
