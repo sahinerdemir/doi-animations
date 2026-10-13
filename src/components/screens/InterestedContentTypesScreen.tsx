@@ -167,20 +167,20 @@ export function InterestedContentTypesScreen({
     const absD = Math.abs(delta);
     if (absD > 3.6) continue;
 
-    // Dikey kaydırma konumu (görseldeki katman aralıkları ~46px)
-    const y = delta * 46;
+    // Dikey kaydırma konumu (aralıkları daha açık: ~62px adım)
+    const y = delta * 62;
 
     // Boyut küçülmesi (arkaya doğru derinlik hissi)
-    const scale = Math.max(0.68, 1 - absD * 0.08);
+    const scale = Math.max(0.72, 1 - absD * 0.075);
 
     // Görseldeki gibi arkaya doğru azalan opacity
     let opacity = 0;
     if (absD < 1) {
-      opacity = 1 - absD * 0.14;
+      opacity = 1 - absD * 0.12;
     } else if (absD < 2) {
-      opacity = 0.86 - (absD - 1) * 0.28;
+      opacity = 0.88 - (absD - 1) * 0.28;
     } else if (absD < 3.5) {
-      opacity = Math.max(0, 0.58 - (absD - 2) * 0.24);
+      opacity = Math.max(0, 0.60 - (absD - 2) * 0.24);
     }
 
     // Merkezdeki kart daima en üstte (z: 50), uzaklaştıkça arkaya girer
@@ -224,8 +224,8 @@ export function InterestedContentTypesScreen({
         </button>
       </div>
 
-      {/* 3. Headline Area */}
-      <div className="px-6 pt-1 pb-2 text-center z-20 shrink-0">
+      {/* 3. Headline Area (Üstüne 30px boşluk eklendi) */}
+      <div className="px-6 pt-[30px] pb-2 text-center z-20 shrink-0">
         <h1 className="text-[28px] sm:text-[30px] font-normal leading-[1.2] text-[#111111] tracking-tight">
           Hangi içerik türleri
           <br />
@@ -236,57 +236,59 @@ export function InterestedContentTypesScreen({
         </p>
       </div>
 
-      {/* 4. Katmanlı Dikey Carousel Çarkı (Kutular bükülmez, ön yüzleri düz bakar, arkaya doğru küçülüp solar) */}
-      <div
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onWheel={handleWheel}
-        className="relative flex-1 w-full flex items-center justify-center select-none cursor-grab active:cursor-grabbing touch-none z-10 my-auto min-h-[380px]"
-      >
-        {cards.map((card) => {
-          const IconComp = card.item.icon;
+      {/* 4. Katmanlı Dikey Carousel Çarkı - Başlık ile Devam Butonu Arasında Tam Ortalanmış */}
+      <div className="flex-1 w-full relative flex items-center justify-center pb-[96px] overflow-hidden select-none z-10">
+        <div
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          onWheel={handleWheel}
+          className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
+        >
+          {cards.map((card) => {
+            const IconComp = card.item.icon;
 
-          return (
-            <div
-              key={card.k}
-              onClick={() => handleCardClick(card.k, card.item.id)}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: `translate3d(-50%, calc(-50% + ${card.y}px), 0) scale(${card.scale})`,
-                opacity: card.opacity,
-                zIndex: card.zIndex,
-                transformOrigin: "center center",
-              }}
-              className="w-[310px] max-w-[88%] cursor-pointer transition-[box-shadow,background-color] duration-150"
-            >
+            return (
               <div
-                className={`w-full h-[60px] sm:h-[64px] rounded-full px-6 flex items-center gap-4 select-none transition-all duration-200 ${
-                  card.isSelected
-                    ? "bg-[#EF4823] text-white shadow-[0_8px_25px_rgba(239,72,35,0.35)]"
-                    : "bg-white text-[#111111] shadow-[0_4px_18px_rgba(0,0,0,0.06)] border border-black/[0.04] hover:bg-white/95"
-                }`}
+                key={card.k}
+                onClick={() => handleCardClick(card.k, card.item.id)}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: `translate3d(-50%, calc(-50% + ${card.y}px), 0) scale(${card.scale})`,
+                  opacity: card.opacity,
+                  zIndex: card.zIndex,
+                  transformOrigin: "center center",
+                }}
+                className="w-[310px] max-w-[88%] cursor-pointer transition-[box-shadow,background-color] duration-150"
               >
-                <IconComp
-                  className={`w-6 h-6 stroke-[1.9] shrink-0 ${
-                    card.isSelected ? "text-white" : "text-[#EF4823]"
+                <div
+                  className={`w-full h-[60px] sm:h-[64px] rounded-full px-6 flex items-center gap-4 select-none transition-all duration-200 ${
+                    card.isSelected
+                      ? "bg-[#EF4823] text-white shadow-[0_8px_25px_rgba(239,72,35,0.35)]"
+                      : "bg-white text-[#111111] shadow-[0_4px_18px_rgba(0,0,0,0.06)] border border-black/[0.04] hover:bg-white/95"
                   }`}
-                />
+                >
+                  <IconComp
+                    className={`w-6 h-6 stroke-[1.9] shrink-0 ${
+                      card.isSelected ? "text-white" : "text-[#EF4823]"
+                    }`}
+                  />
 
-                <span className="text-[17px] font-semibold tracking-tight truncate flex-1 text-left">
-                  {card.item.label}
-                </span>
+                  <span className="text-[17px] font-semibold tracking-tight truncate flex-1 text-left">
+                    {card.item.label}
+                  </span>
 
-                {card.isSelected && (
-                  <CheckCircle2 className="w-5 h-5 text-white stroke-[2.2] shrink-0 ml-auto" />
-                )}
+                  {card.isSelected && (
+                    <CheckCircle2 className="w-5 h-5 text-white stroke-[2.2] shrink-0 ml-auto" />
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* 5. Floating Bottom Navigation Bar (Step 2 active) */}
