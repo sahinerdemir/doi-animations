@@ -16,7 +16,8 @@ interface AnimationDetailsPanelProps {
 export function AnimationDetailsPanel({
   selectedPageId,
 }: AnimationDetailsPanelProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // Default olarak kapalı başlar
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const spec: ScreenAnimationSpec = ANIMATION_SPECS[selectedPageId] || {
     pageId: selectedPageId,
@@ -42,16 +43,16 @@ export function AnimationDetailsPanel({
 
   if (isCollapsed) {
     return (
-      <aside className="fixed right-4 top-20 z-40">
+      <aside className="fixed right-5 bottom-5 z-40">
         <button
           type="button"
           onClick={() => setIsCollapsed(false)}
           title="Animasyon Detayları Panelini Aç"
-          className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-zinc-900/95 border border-zinc-700/80 shadow-2xl text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all backdrop-blur-md active:scale-95 cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-zinc-900/95 hover:bg-zinc-850 text-zinc-200 hover:text-white border border-zinc-700/80 shadow-2xl transition-all backdrop-blur-md active:scale-95 group cursor-pointer"
         >
-          <Sliders className="w-3.5 h-3.5 text-[#EF4823]" />
+          <Sliders className="w-3.5 h-3.5 text-[#EF4823] group-hover:rotate-12 transition-transform" />
           <span className="text-xs font-medium">Animasyon Detayları</span>
-          <PanelRightOpen className="w-3.5 h-3.5 text-zinc-400" />
+          <PanelRightOpen className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200" />
         </button>
       </aside>
     );
