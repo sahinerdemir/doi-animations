@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { StatusBar } from "@/components/splash/StatusBar";
-import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, ChevronDown, PartyPopper, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface RegisterKonyaliStep5ScreenProps {
@@ -14,152 +14,120 @@ export function RegisterKonyaliStep5Screen({
   onBack,
   onSuccess,
 }: RegisterKonyaliStep5ScreenProps) {
-  const [email, setEmail] = useState("mustafa.daglar@gmail.com");
-  const [phone, setPhone] = useState("(538) 611 99 11");
-  const [gender, setGender] = useState("Erkek");
-  const [isActivating, setIsActivating] = useState(false);
-
-  const handleActivate = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsActivating(true);
-    setTimeout(() => {
-      setIsActivating(false);
-      onSuccess?.();
-    }, 900);
-  };
-
   return (
-    <div className="relative w-full h-full bg-[#111111] text-white flex flex-col justify-between overflow-hidden select-none font-sans">
+    <div className="relative w-full h-full bg-[#F4F4F6] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans">
       {/* 1. Status Bar */}
-      <StatusBar time="9:41" className="pt-2" />
+      <StatusBar time="9:41" className="pt-2 z-20" />
 
       {/* 2. Top Nav */}
-      <div className="px-6 py-2 flex items-center justify-between z-20">
+      <div className="px-6 py-2 flex items-center justify-between z-20 relative">
         <button
           type="button"
           onClick={onBack}
-          className="w-10 h-10 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 flex items-center justify-center text-white transition-all active:scale-95"
+          className="w-8 h-8 flex items-center justify-center text-[#111111] hover:opacity-70 transition-opacity"
           title="Geri"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5 stroke-[2]" />
         </button>
 
-        <span className="text-xs font-semibold text-emerald-400 bg-emerald-950/80 border border-emerald-800/40 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>KMK Üyeliği Doğrulandı</span>
-        </span>
+        <h3 className="text-lg font-bold text-[#111111] absolute left-1/2 -translate-x-1/2">
+          Üye Ol
+        </h3>
+
+        <div className="w-8" />
       </div>
 
-      {/* 3. Header Title */}
-      <div className="px-6 pt-2 pb-1">
-        <h2 className="text-2xl font-bold tracking-tight text-white leading-tight">
-          Hoş Geldin, <span className="text-[#EF4823]">Mustafa Dağlar</span>
-        </h2>
-        <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-          Konya Millet Kütüphanesi üyeliğin doğrulandı! DOİ uygulamasını 1 yıl boyunca ücretsiz kullanmaya başlamak için son adımı onayla.
-        </p>
-      </div>
+      {/* 3. Form Content */}
+      <div className="flex-1 overflow-y-auto px-5 py-2 pb-24 scrollbar-none space-y-3.5">
+        {/* Card 1: Yaşadığın Şehir */}
+        <div className="w-full bg-white rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex items-center justify-between">
+          <span className="text-sm font-normal text-[#111111]">Yaşadığın Şehir *</span>
+          <div className="relative flex items-center gap-1.5">
+            <span className="text-sm font-semibold text-[#111111] pr-5">Konya</span>
+            <ChevronDown className="w-4 h-4 text-[#111111] absolute right-0" />
+          </div>
+        </div>
 
-      {/* 4. Verified Profile Card & Confirmation Form */}
-      <form onSubmit={handleActivate} className="flex-1 overflow-y-auto px-6 py-2 space-y-3 scrollbar-none pb-24">
-        {/* Verified Badge Card */}
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-zinc-900 border border-emerald-800/40 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">
-              Aktif Ayrıcalık
-            </span>
-            <h4 className="text-sm font-bold text-white mt-0.5">
-              1 Yıllık Tam DOİ Premium Paketi
+        {/* Card 2: Hoş Geldin Mustafa Dağlar (Exact Figma #14203:146137) */}
+        <div className="w-full bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] border border-zinc-200/80 space-y-2.5">
+          <div className="flex items-start gap-3">
+            <PartyPopper className="w-7 h-7 text-[#EF4823] shrink-0 mt-0.5" />
+            <h4 className="text-base font-bold text-[#111111] leading-tight">
+              Hoş Geldin Mustafa Dağlar,
             </h4>
-            <span className="text-[11px] text-zinc-400">Ücretsiz (Millet Kütüphanesi Sponsorluğunda)</span>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <Sparkles className="w-5 h-5" />
-          </div>
+
+          <p className="text-xs text-zinc-700 leading-relaxed">
+            Konya Millet Kütüphanesi üyeliğin doğrulandı, DOİ uygulamasından 1 yıl süre ile ücretsiz yararlanmak için aşağıdaki formda eksik alanları doldurarak devam edebilirsin.
+          </p>
         </div>
 
-        {/* Read-Only Verified Identity */}
-        <div className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800/80 space-y-2">
-          <div className="flex items-center justify-between text-xs pb-1 border-b border-zinc-800">
-            <span className="text-zinc-500">Ad Soyad</span>
-            <span className="font-semibold text-white flex items-center gap-1">
-              Mustafa Dağlar
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+        {/* Card 3: Pre-filled Profile Data */}
+        <div className="w-full bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] divide-y divide-zinc-100 overflow-hidden text-sm">
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Ad *</span>
+            <span className="font-semibold text-[#111111]">Mustafa</span>
+          </div>
+
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Soyad *</span>
+            <span className="font-semibold text-[#111111]">Dağlar</span>
+          </div>
+
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">E-Posta Adresi *</span>
+            <span className="font-medium text-[#111111] truncate max-w-[190px]">
+              mustafa.daglar@gmail.co...
             </span>
           </div>
 
-          <div className="flex items-center justify-between text-xs pb-1 border-b border-zinc-800">
-            <span className="text-zinc-500">Doğum Tarihi</span>
-            <span className="font-mono text-zinc-300">12/05/1992</span>
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Cep Telefonu *</span>
+            <span className="font-mono font-medium text-[#111111]">
+              (538) 611 99 11
+            </span>
           </div>
 
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-zinc-500">Konum / Şehir</span>
-            <span className="text-zinc-300">Konya / Selçuklu</span>
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Doğum Tarihi *</span>
+            <span className="font-mono font-medium text-[#111111]">
+              12/05/1992
+            </span>
+          </div>
+
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Cinsiyet</span>
+            <div className="relative flex items-center gap-1.5">
+              <span className="text-sm font-semibold text-[#111111] pr-5">Erkek</span>
+              <ChevronDown className="w-4 h-4 text-[#111111] absolute right-0" />
+            </div>
           </div>
         </div>
 
-        {/* Contact Info (Editable) */}
-        <div>
-          <label className="text-[11px] font-medium text-zinc-400 block mb-1">
-            E-Posta Adresi
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full h-12 px-3.5 text-xs rounded-xl bg-zinc-900 border border-zinc-800 text-white focus:outline-none focus:border-[#EF4823]"
-          />
-        </div>
+        {/* Card 4: Passwords */}
+        <div className="w-full bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] divide-y divide-zinc-100 overflow-hidden text-sm">
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Şifre *</span>
+            <EyeOff className="w-4 h-4 text-zinc-400" />
+          </div>
 
-        <div>
-          <label className="text-[11px] font-medium text-zinc-400 block mb-1">
-            Cep Telefonu
-          </label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full h-12 px-3.5 text-xs rounded-xl bg-zinc-900 border border-zinc-800 text-white font-mono focus:outline-none focus:border-[#EF4823]"
-          />
-        </div>
-
-        {/* Gender Selection */}
-        <div>
-          <label className="text-[11px] font-medium text-zinc-400 block mb-1">
-            Cinsiyet
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {["Erkek", "Kadın"].map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => setGender(g)}
-                className={`h-11 rounded-xl text-xs font-medium border transition-all ${
-                  gender === g
-                    ? "bg-[#EF4823] text-white border-[#EF4823]"
-                    : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700"
-                }`}
-              >
-                {g}
-              </button>
-            ))}
+          <div className="p-4 flex items-center justify-between">
+            <span className="text-zinc-600 font-normal w-28">Şifre Tekrar *</span>
+            <EyeOff className="w-4 h-4 text-zinc-400" />
           </div>
         </div>
 
         {/* Submit */}
-        <div className="pt-2">
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            disabled={isActivating}
-            className="w-full h-13 rounded-2xl bg-[#EF4823] hover:bg-[#ff5530] text-white flex items-center justify-between px-6 text-sm font-semibold transition-all shadow-xl shadow-[#EF4823]/30 cursor-pointer"
-          >
-            <span>{isActivating ? "Abonelik Başlatılıyor..." : "1 Yıllık Ücretsiz Aboneliği Başlat"}</span>
-            <ArrowRight className="w-4 h-4" />
-          </motion.button>
-        </div>
-      </form>
+        <motion.button
+          whileTap={{ scale: 0.98 }}
+          type="button"
+          onClick={onSuccess}
+          className="w-full h-14 rounded-full bg-[#EF4823] hover:bg-[#ff5530] text-white flex items-center justify-between px-8 text-base font-semibold shadow-xl shadow-[#EF4823]/25 cursor-pointer mt-2"
+        >
+          <span>1 Yıllık Ücretsiz Aboneliği Başlat</span>
+          <ArrowRight className="w-5 h-5" />
+        </motion.button>
+      </div>
     </div>
   );
 }

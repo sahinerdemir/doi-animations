@@ -1,138 +1,68 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { StatusBar } from "@/components/splash/StatusBar";
-import { motion } from "framer-motion";
-import { Sparkles, CheckCircle2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface PersonalizationScreenProps {
   onComplete?: () => void;
 }
 
-const STEPS_STATUS = [
-  "İlgi alanların ve kategorilerin taranıyor...",
-  "Sesli kitap ve radyo tiyatrosu arşivleri eşleştiriliyor...",
-  "Sana özel okuma ve dinleme listeleri oluşturuluyor...",
-  "Kütüphanen hazırlandı!",
-];
-
 export function PersonalizationScreen({ onComplete }: PersonalizationScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [statusIndex, setStatusIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval);
+          clearInterval(timer);
           setTimeout(() => {
             onComplete?.();
-          }, 600);
+          }, 500);
           return 100;
         }
-        const next = prev + 1;
-        if (next === 30) setStatusIndex(1);
-        if (next === 65) setStatusIndex(2);
-        if (next === 95) setStatusIndex(3);
-        return next;
+        return prev + 1;
       });
-    }, 35);
+    }, 30);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
   }, [onComplete]);
 
-  // SVG Circular progress params
-  const radius = 80;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
   return (
-    <div className="relative w-full h-full bg-[#111111] text-white flex flex-col justify-between items-center overflow-hidden select-none font-sans p-6">
+    <div className="relative w-full h-full bg-black text-white flex flex-col justify-between overflow-hidden select-none font-sans">
       {/* 1. Status Bar */}
-      <StatusBar time="9:41" className="pt-2 w-full" />
+      <StatusBar time="9:41" className="pt-2 z-20 text-white" />
 
-      {/* 2. Center Animated Wheel */}
-      <div className="flex-1 flex flex-col items-center justify-center -mt-8">
-        <div className="relative w-52 h-52 flex items-center justify-center">
-          {/* Outer glow ring */}
-          <div className="absolute inset-0 rounded-full bg-[#EF4823]/10 blur-xl animate-pulse" />
-
-          {/* SVG Progress Circle */}
-          <svg className="w-52 h-52 -rotate-90">
-            {/* Background track */}
-            <circle
-              cx="104"
-              cy="104"
-              r={radius}
-              stroke="currentColor"
-              strokeWidth="10"
-              fill="transparent"
-              className="text-zinc-800"
-            />
-            {/* Progress line */}
-            <circle
-              cx="104"
-              cy="104"
-              r={radius}
-              stroke="#EF4823"
-              strokeWidth="10"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              fill="transparent"
-              className="transition-all duration-75"
-            />
-          </svg>
-
-          {/* Percentage Value in Center */}
-          <div className="absolute flex flex-col items-center justify-center">
-            <span className="text-4xl font-extrabold text-white font-mono tracking-tight">
-              %{progress}
-            </span>
-            <span className="text-[10px] uppercase tracking-widest text-[#EF4823] font-semibold mt-1">
-              Analiz
-            </span>
-          </div>
-        </div>
-
-        {/* Dynamic Status Text */}
-        <div className="mt-8 text-center px-4 max-w-xs space-y-2">
-          <div className="inline-flex items-center gap-2 bg-[#EF4823]/15 text-[#EF4823] px-3.5 py-1.5 rounded-full text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 animate-spin" />
-            <span>Kişiselleştiriliyor</span>
-          </div>
-
-          <h3 className="text-lg font-bold text-white tracking-tight">
-            DOİ senin için hazırlanıyor...
-          </h3>
-
-          <p className="text-xs text-zinc-400 min-h-[32px] transition-all">
-            {STEPS_STATUS[statusIndex]}
-          </p>
-        </div>
+      {/* 2. Mosaic Background from Figma */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/figma-refs/ref-personalization.png"
+          alt="DOİ Kütüphane Arşivi"
+          fill
+          priority
+          className="object-cover opacity-60 filter blur-[1px]"
+        />
+        <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px]" />
       </div>
 
-      {/* 3. Bottom Skip / Manual Continue */}
-      <div className="w-full pb-4 text-center">
-        {progress === 100 ? (
-          <motion.button
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            onClick={onComplete}
-            className="w-full h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
-          >
-            <CheckCircle2 className="w-5 h-5" />
-            <span>Hazır! Devam Et</span>
-          </motion.button>
-        ) : (
-          <button
-            type="button"
-            onClick={onComplete}
-            className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-          >
-            Beklemeden devam et →
-          </button>
-        )}
+      {/* 3. Center Title (Exact Figma #14203:144887) */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 z-10 -mt-10">
+        <h2 className="text-[30px] sm:text-[32px] font-normal leading-[1.25] text-white tracking-tight">
+          DOİ senin için
+          <br />
+          kişiselleştiriliyor...
+        </h2>
+      </div>
+
+      {/* 4. Bottom Frosted Glass Pill with Animated Percentage (Exact Figma) */}
+      <div className="w-full px-6 pb-12 z-10 flex justify-center">
+        <div className="h-16 px-10 rounded-full bg-black/75 backdrop-blur-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-3.5">
+          <span className="text-xl font-bold font-mono text-white tracking-wider">
+            %{progress}
+          </span>
+          <Loader2 className="w-5 h-5 text-white animate-spin" />
+        </div>
       </div>
     </div>
   );

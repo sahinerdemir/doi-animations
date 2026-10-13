@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { StatusBar } from "@/components/splash/StatusBar";
-import { ArrowLeft, ArrowRight, Check, Compass } from "lucide-react";
+import { ChevronRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface AreasOfInterestScreenProps {
@@ -11,19 +11,26 @@ interface AreasOfInterestScreenProps {
   onSkip?: () => void;
 }
 
-const INTERESTS = [
-  { id: "edebiyat", label: "Edebiyat", icon: "📖", category: "Kültür" },
-  { id: "psikoloji", label: "Psikoloji", icon: "🧠", category: "İnsan" },
-  { id: "felsefe", label: "Felsefe", icon: "🏛️", category: "Düşünce" },
-  { id: "bilim", label: "Bilim ve Teknoloji", icon: "🔬", category: "Gelecek" },
-  { id: "tarih", label: "Tarih", icon: "⏳", category: "Kültür" },
-  { id: "sanat", label: "Sanat", icon: "🎨", category: "Kültür" },
-  { id: "kisisel-gelisim", label: "Kişisel Gelişim", icon: "🌱", category: "İnsan" },
-  { id: "cocuk-genc", label: "Çocuk ve Genç", icon: "🚀", category: "Eğitim" },
-  { id: "hukuk", label: "Hukuk", icon: "⚖️", category: "Toplum" },
-  { id: "ekonomi", label: "Ekonomi & Finans", icon: "📈", category: "İş" },
-  { id: "saglik", label: "Sağlık & Yaşam", icon: "🌿", category: "Yaşam" },
-  { id: "mitoloji", label: "Mitoloji", icon: "⚡", category: "Tarih" },
+const INTEREST_ITEMS = [
+  { id: "edebiyat", label: "Edebiyat", tilt: "-rotate-2" },
+  { id: "bilim-teknoloji", label: "Bilim ve\nTeknoloji", tilt: "rotate-0" },
+  { id: "din", label: "Din", tilt: "rotate-1" },
+
+  { id: "ekonomi", label: "Ekonomi", tilt: "rotate-1" },
+  { id: "felsefe", label: "Felsefe", tilt: "rotate-0" },
+  { id: "gastronomi", label: "Gastronomi", tilt: "-rotate-1" },
+
+  { id: "hukuk", label: "Hukuk", tilt: "-rotate-1" },
+  { id: "kisisel-gelisim", label: "Kişisel\nGelişim", tilt: "rotate-0" },
+  { id: "tarih", label: "Tarih", tilt: "rotate-1" },
+
+  { id: "mitoloji", label: "Mitoloji", tilt: "rotate-1" },
+  { id: "psikoloji", label: "Psikoloji", tilt: "rotate-0" },
+  { id: "saglik", label: "Sağlık", tilt: "-rotate-1" },
+
+  { id: "sanat", label: "Sanat", tilt: "-rotate-1" },
+  { id: "seyahat", label: "Seyahat", tilt: "rotate-0" },
+  { id: "siyaset", label: "Siyaset", tilt: "rotate-1" },
 ];
 
 export function AreasOfInterestScreen({
@@ -31,135 +38,113 @@ export function AreasOfInterestScreen({
   onNext,
   onSkip,
 }: AreasOfInterestScreenProps) {
+  // Preselect from Figma reference: Edebiyat, Bilim ve Teknoloji, Felsefe, Hukuk, Tarih
   const [selectedIds, setSelectedIds] = useState<string[]>([
     "edebiyat",
-    "bilim",
+    "bilim-teknoloji",
     "felsefe",
+    "hukuk",
+    "tarih",
   ]);
 
-  const toggleInterest = (id: string) => {
+  const toggleItem = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  return (
-    <div className="relative w-full h-full bg-[#111111] text-white flex flex-col justify-between overflow-hidden select-none font-sans">
-      {/* 1. Status Bar */}
-      <StatusBar time="9:41" className="pt-2" />
+  const isComplete = selectedIds.length >= 3;
 
-      {/* 2. Top Nav: Back + Skip */}
+  return (
+    <div className="relative w-full h-full bg-[#F4F4F6] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans">
+      {/* 1. Status Bar */}
+      <StatusBar time="9:41" className="pt-2 z-20" />
+
+      {/* 2. Top Navigation */}
       <div className="px-6 py-2 flex items-center justify-between z-20">
         <button
           type="button"
           onClick={onBack}
-          className="w-10 h-10 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 flex items-center justify-center text-white transition-all active:scale-95"
-          title="Geri"
+          className="text-xs font-semibold uppercase tracking-wider text-[#111111] hover:opacity-70 transition-opacity"
         >
-          <ArrowLeft className="w-5 h-5" />
+          {onBack && "‹ GERİ"}
         </button>
-
-        <span className="text-xs font-semibold text-zinc-500 font-mono tracking-wider">
-          ADIM 1 / 3
-        </span>
 
         <button
           type="button"
-          onClick={onSkip}
-          className="text-xs font-semibold tracking-wider uppercase text-zinc-400 hover:text-white px-2 py-1 transition-colors"
+          onClick={onSkip || onNext}
+          className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#111111] hover:opacity-70 transition-opacity ml-auto"
         >
-          GEÇ
+          <span>GEÇ</span>
+          <ChevronRight className="w-4 h-4 stroke-[2.5]" />
         </button>
       </div>
 
-      {/* 3. Header Title Area */}
-      <div className="px-6 pt-3 pb-2">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-[#EF4823]" />
-          <span className="text-[11px] font-semibold tracking-wider uppercase text-[#EF4823]">
-            Kişiselleştirme
-          </span>
-        </div>
-        <h2 className="text-2xl font-bold tracking-tight text-white leading-tight">
-          İlgi Alanlarını Seç
-        </h2>
-        <p className="text-xs text-zinc-400 mt-1">
-          Sana özel kütüphane oluşturabilmemiz için en az 3 alan belirle.
+      {/* 3. Headline Area */}
+      <div className="px-6 pt-1 pb-4 text-center z-10">
+        <h1 className="text-[28px] sm:text-[30px] font-normal leading-[1.2] text-[#111111] tracking-tight">
+          İlgilendiğin alanlar
+          <br />
+          hangileri?
+        </h1>
+        <p className="text-sm font-normal text-[#111111]/70 mt-2">
+          En az üç adet ilgi alanı seç.
         </p>
       </div>
 
-      {/* 4. Scrollable Grid of Interest Chips */}
-      <div className="flex-1 overflow-y-auto px-6 py-3 scrollbar-none">
-        <div className="grid grid-cols-2 gap-2.5 pb-20">
-          {INTERESTS.map((item) => {
+      {/* 4. Tilted / Organic Cards Grid (Figma 3 Columns) */}
+      <div className="flex-1 overflow-y-auto px-4 py-1 pb-28 scrollbar-none">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+          {INTEREST_ITEMS.map((item) => {
             const isSelected = selectedIds.includes(item.id);
             return (
               <motion.button
                 key={item.id}
-                whileTap={{ scale: 0.96 }}
+                whileTap={{ scale: 0.95 }}
                 type="button"
-                onClick={() => toggleInterest(item.id)}
-                className={`p-3.5 rounded-2xl text-left flex flex-col justify-between transition-all duration-200 border min-h-[92px] ${
+                onClick={() => toggleItem(item.id)}
+                className={`min-h-[96px] sm:min-h-[104px] rounded-[22px] p-3 flex items-center justify-center text-center transition-all duration-200 cursor-pointer shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${
+                  item.tilt
+                } ${
                   isSelected
-                    ? "bg-[#EF4823] text-white border-[#EF4823] shadow-lg shadow-[#EF4823]/25"
-                    : "bg-zinc-900/90 text-zinc-300 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-850"
+                    ? "bg-[#EF4823] text-white shadow-lg shadow-[#EF4823]/25"
+                    : "bg-white text-[#111111] hover:bg-white/90"
                 }`}
               >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xl">{item.icon}</span>
-                  <div
-                    className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? "bg-white text-[#EF4823]"
-                        : "bg-zinc-800 text-transparent"
-                    }`}
-                  >
-                    <Check className="w-3 h-3 stroke-[3]" />
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-semibold tracking-tight leading-snug">
-                    {item.label}
-                  </h4>
-                  <span
-                    className={`text-[10px] ${
-                      isSelected ? "text-white/80" : "text-zinc-500"
-                    }`}
-                  >
-                    {item.category}
-                  </span>
-                </div>
+                <span className="text-sm sm:text-[15px] font-semibold leading-snug whitespace-pre-line tracking-tight">
+                  {item.label}
+                </span>
               </motion.button>
             );
           })}
         </div>
       </div>
 
-      {/* 5. Sticky Bottom Action Bar with Blur */}
-      <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-[#111111] via-[#111111]/90 to-transparent pt-8 z-30">
-        <div className="flex items-center justify-between mb-2 px-1 text-xs">
-          <span className="text-zinc-400">
-            Seçilen:{" "}
-            <strong className="text-white font-semibold">
-              {selectedIds.length} alan
-            </strong>
-          </span>
-          {selectedIds.length < 3 && (
-            <span className="text-amber-400 text-[11px]">En az 3 alan önerilir</span>
-          )}
-        </div>
+      {/* 5. Floating Bottom Navigation Bar (Exact Figma Bottom Pill #14255:2236) */}
+      <div className="absolute bottom-6 inset-x-6 z-30">
+        <div className="w-full h-15 rounded-full bg-white/90 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-white/60 px-6 flex items-center justify-between">
+          {/* 4 Step Dashes (Step 1 active orange) */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-6 h-1.5 rounded-full bg-[#EF4823]" />
+            <div className="w-6 h-1.5 rounded-full bg-[#D1D1D6]" />
+            <div className="w-6 h-1.5 rounded-full bg-[#D1D1D6]" />
+            <div className="w-6 h-1.5 rounded-full bg-[#D1D1D6]" />
+          </div>
 
-        <motion.button
-          whileTap={{ scale: 0.98 }}
-          type="button"
-          onClick={onNext}
-          disabled={selectedIds.length === 0}
-          className="w-full h-14 rounded-full bg-[#EF4823] hover:bg-[#ff5530] text-white flex items-center justify-between px-8 text-base font-semibold transition-all shadow-xl shadow-[#EF4823]/30 disabled:opacity-40 cursor-pointer"
-        >
-          <span>Devam Et</span>
-          <ArrowRight className="w-5 h-5" />
-        </motion.button>
+          {/* Devam Button */}
+          <button
+            type="button"
+            onClick={onNext}
+            className={`flex items-center gap-2 text-sm sm:text-[15px] font-medium transition-all ${
+              isComplete
+                ? "text-[#111111] font-semibold hover:text-[#EF4823]"
+                : "text-[#777777] opacity-60"
+            }`}
+          >
+            <span>Devam</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

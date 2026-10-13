@@ -15,9 +15,23 @@ import { RegisterKonyaliStep5Screen } from "@/components/screens/RegisterKonyali
 import { MembershipPlansScreen } from "@/components/screens/MembershipPlansScreen";
 import { DeviceFrame } from "@/components/common/DeviceFrame";
 import { SidebarTree } from "@/components/navigation/SidebarTree";
-import { siteTreeData } from "@/data/pagesTree";
 import { PageNode } from "@/types/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+
+const REFERENCE_IMAGES: Record<string, string> = {
+  "splash-screen": "/images/splash-screen-reference.png",
+  "login": "/images/login-screen-reference.png",
+  "areas-of-interest": "/images/figma-refs/ref-areas-of-interest.png",
+  "interested-content-types": "/images/figma-refs/ref-content-types.png",
+  "contents": "/images/figma-refs/ref-contents.png",
+  "personalization": "/images/figma-refs/ref-personalization.png",
+  "personalization-done": "/images/figma-refs/ref-personalization-done.png",
+  "register-non-konya": "/images/figma-refs/ref-register-non-konya.png",
+  "register-konyali-step4": "/images/figma-refs/ref-register-konyali-step4.png",
+  "register-konyali-step5": "/images/figma-refs/ref-register-konyali-step5.png",
+  "membership-plans": "/images/figma-refs/ref-membership-plans.png",
+  "forgot-password": "/images/figma-refs/ref-forgot-password-step1.png",
+};
 
 export default function HomePage() {
   const [selectedPageId, setSelectedPageId] = useState<string>("splash-screen");
@@ -38,7 +52,7 @@ export default function HomePage() {
       case "splash-screen":
         return (
           <SplashScreen
-            onStart={() => navigateTo("areas-of-interest", "İlgi alanları seçimine geçildi.")}
+            onStart={() => navigateTo("areas-of-interest", "İlgi alanları ekranına geçildi.")}
             onLogin={() => navigateTo("login", "Giriş ekranına geçildi.")}
             showStatusBar={true}
           />
@@ -47,9 +61,10 @@ export default function HomePage() {
       case "login":
         return (
           <LoginScreen
-            onBack={() => navigateTo("splash-screen")}
+            onClose={() => navigateTo("splash-screen")}
             onForgotPassword={() => navigateTo("forgot-password")}
             onRegister={() => navigateTo("register-non-konya")}
+            onGuest={() => navigateTo("areas-of-interest")}
             onSuccess={() => navigateTo("personalization-done", "Başarıyla giriş yapıldı!")}
           />
         );
@@ -92,7 +107,7 @@ export default function HomePage() {
       case "personalization":
         return (
           <PersonalizationScreen
-            onComplete={() => navigateTo("personalization-done", "Kütüphanen hazırlandı!")}
+            onComplete={() => navigateTo("personalization-done", "Kişiselleştirme tamamlandı!")}
           />
         );
 
@@ -108,8 +123,8 @@ export default function HomePage() {
         return (
           <RegisterNonKonyaScreen
             onBack={() => navigateTo("login")}
-            onLogin={() => navigateTo("login")}
-            onSuccess={() => navigateTo("membership-plans", "Kaydınız oluşturuldu!")}
+            onSelectKonya={() => navigateTo("register-konyali-step4", "Konya 1 Yıl Ücretsiz Fırsatı!")}
+            onSuccess={() => navigateTo("membership-plans", "Kaydınız tamamlandı!")}
           />
         );
 
@@ -118,7 +133,7 @@ export default function HomePage() {
           <RegisterKonyaliStep4Screen
             onBack={() => navigateTo("register-non-konya")}
             onNext={() => navigateTo("register-konyali-step5", "KMK üyeliğiniz doğrulandı!")}
-            onSkip={() => navigateTo("membership-plans")}
+            onKmkLogin={() => navigateTo("register-konyali-step5")}
           />
         );
 
@@ -126,7 +141,7 @@ export default function HomePage() {
         return (
           <RegisterKonyaliStep5Screen
             onBack={() => navigateTo("register-konyali-step4")}
-            onSuccess={() => navigateTo("personalization-done", "1 Yıllık ücretsiz üyeliğiniz başladı!")}
+            onSuccess={() => navigateTo("personalization-done", "1 Yıllık ücretsiz aboneliğiniz başladı!")}
           />
         );
 
@@ -160,8 +175,11 @@ export default function HomePage() {
         }}
       />
 
-      {/* 2. Center Viewport with Scaled Mockup & Top-Right Fullscreen Icon */}
-      <DeviceFrame>
+      {/* 2. Center Viewport with Scaled Mockup & Top-Right Fullscreen / Compare Controls */}
+      <DeviceFrame
+        referenceImage={REFERENCE_IMAGES[selectedPageId]}
+        pageTitle={selectedPageId}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedPageId}
