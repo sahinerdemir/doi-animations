@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { StatusBar } from "@/components/splash/StatusBar";
-import { ArrowRightIcon } from "@/components/splash/SplashScreen";
+import { SplashScreen, ArrowRightIcon } from "@/components/splash/SplashScreen";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
 interface LoginScreenProps {
   onClose?: () => void;
@@ -37,53 +38,34 @@ export function LoginScreen({
 
   return (
     <div className="relative w-full h-full bg-[#EF4823] text-white flex flex-col justify-between overflow-hidden select-none font-sans">
-      {/* 1. Status Bar */}
-      <StatusBar time="9:41" className="pt-2 z-10" />
-
-      {/* 2. Background Hero Illustration (Exact Splash Artwork from Figma) */}
-      <div className="absolute top-[86px] -left-4 w-[424px] h-[461px] pointer-events-none select-none z-0">
-        <Image
-          src="/images/splash-illustration.svg"
-          alt="DOİ Arka Plan"
-          width={424}
-          height={461}
-          priority
-          className="object-contain"
-        />
+      {/* 1. Real Splash Screen running in the background */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+        <SplashScreen showStatusBar={false} />
+        {/* Soft dark overlay to give focus to the login modal */}
+        <div className="absolute inset-0 bg-black/25 backdrop-blur-[2px] z-10" />
       </div>
 
-      {/* Background Headline under modal */}
-      <div className="absolute top-[585px] left-[31px] w-[331px] text-center z-0 opacity-40">
-        <h1 className="text-[30px] leading-[42px] font-normal text-[#111111]">
-          Yeni Nesil Kütüphaneye
-          <br />
-          <strong className="font-bold">Hoş Geldin!</strong>
-        </h1>
-      </div>
+      {/* 2. Status Bar on top of modal */}
+      <StatusBar time="9:41" className="pt-2 z-20" />
 
       {/* 3. Floating Modal Card (Figma Node #14203:145541) */}
       <motion.div
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 45, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 60, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 28 }}
-        className="absolute top-[140px] sm:top-[150px] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[362px] min-h-[660px] bg-[#111111]/70 backdrop-blur-xl rounded-[32px] p-6 pt-5 shadow-[0_4px_24px_rgba(0,0,0,0.4)] border border-white/10 z-20 flex flex-col justify-between"
+        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        className="absolute top-[138px] sm:top-[146px] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[362px] min-h-[640px] bg-[#111111]/75 backdrop-blur-2xl rounded-[32px] p-6 pt-5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] border border-white/15 z-20 flex flex-col justify-between"
       >
         {/* Top Close Button (Figma #14203:145571) */}
         <div className="w-full flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="w-[38px] h-[38px] rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center transition-all shadow-md"
+            className="w-[36px] h-[36px] rounded-full bg-white/15 hover:bg-white/25 active:scale-90 flex items-center justify-center transition-all shadow-md cursor-pointer text-white"
             title="Kapat"
+            aria-label="Kapat"
           >
-            <Image
-              src="/images/login-close.svg"
-              alt="Kapat"
-              width={16}
-              height={16}
-              className="w-4 h-4 object-contain brightness-200"
-            />
+            <X className="w-5 h-5 text-white stroke-[2.2]" />
           </button>
         </div>
 
@@ -152,12 +134,12 @@ export function LoginScreen({
           </button>
 
           {/* Grouped Cell Options (Figma #14203:145560) */}
-          <div className="w-full mt-2 rounded-[8px] border border-white/20 divide-y divide-white/20 overflow-hidden bg-white/5">
+          <div className="w-full mt-2 rounded-[10px] border border-white/20 divide-y divide-white/20 overflow-hidden bg-white/5">
             {/* Google */}
             <button
               type="button"
               onClick={() => onSuccess?.()}
-              className="w-full h-12 px-4 flex items-center gap-3.5 hover:bg-white/10 transition-colors text-left"
+              className="w-full h-[44px] px-4 flex items-center gap-3.5 hover:bg-white/10 active:bg-white/15 transition-colors text-left cursor-pointer"
             >
               <Image
                 src="/images/login-google.svg"
@@ -166,14 +148,14 @@ export function LoginScreen({
                 height={16}
                 className="w-4 h-4 object-contain brightness-200"
               />
-              <span className="text-base font-medium text-white">Google ile giriş yap</span>
+              <span className="text-[15px] font-medium text-white">Google ile giriş yap</span>
             </button>
 
             {/* Apple */}
             <button
               type="button"
               onClick={() => onSuccess?.()}
-              className="w-full h-12 px-4 flex items-center gap-3.5 hover:bg-white/10 transition-colors text-left"
+              className="w-full h-[44px] px-4 flex items-center gap-3.5 hover:bg-white/10 active:bg-white/15 transition-colors text-left cursor-pointer"
             >
               <Image
                 src="/images/login-apple.svg"
@@ -182,14 +164,14 @@ export function LoginScreen({
                 height={16}
                 className="w-4 h-4 object-contain"
               />
-              <span className="text-base font-medium text-white">Apple ile giriş yap</span>
+              <span className="text-[15px] font-medium text-white">Apple ile giriş yap</span>
             </button>
 
             {/* Guest */}
             <button
               type="button"
               onClick={onGuest || onSuccess}
-              className="w-full h-12 px-4 flex items-center gap-3.5 hover:bg-white/10 transition-colors text-left"
+              className="w-full h-[44px] px-4 flex items-center gap-3.5 hover:bg-white/10 active:bg-white/15 transition-colors text-left cursor-pointer"
             >
               <Image
                 src="/images/login-user.svg"
@@ -198,7 +180,7 @@ export function LoginScreen({
                 height={18}
                 className="w-4.5 h-4.5 object-contain"
               />
-              <span className="text-base font-medium text-white">Misafir olarak devam et</span>
+              <span className="text-[15px] font-medium text-white">Misafir olarak devam et</span>
             </button>
           </div>
         </div>
