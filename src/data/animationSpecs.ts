@@ -161,16 +161,17 @@ export const ANIMATION_SPECS: Record<string, ScreenAnimationSpec> = {
       },
       {
         id: "tactile-shake",
-        target: "Seçili Olmayan Kutuya Dokunma (Haptic Shake)",
+        target: "Kutu Seçimi & Titreme Efekti (Tactile Shake)",
         trigger: "Tap / Tıklama",
         delayMs: 0,
         durationMs: "380 ms",
         easing: "easeOut",
         properties: [
           "x: [0, -5px, 5px, -4px, 4px, -2px, 2px, 0]",
+          "Haptic dokunsal geri bildirim",
         ],
         description:
-          "Kullanıcı seçilmemiş bir kutuya dokunduğunda hafif bir titreme efekti ile etkileşim geribildirimi verilir.",
+          "Kullanıcı seçilmemiş bir kutuya dokunduğunda kutu hafifçe titreyerek seçili hale gelir.",
         codeSnippet: `animate={{ x: isTriggered ? [0, -5, 5, -4, 4, -2, 2, 0] : 0 }}\ntransition={{ duration: 0.38, ease: "easeOut" }}`,
       },
       {
