@@ -48,13 +48,13 @@ export function SplashScreen({
       {/* 1. Status Bar */}
       {showStatusBar && <StatusBar time="9:41" className="pt-2" />}
 
-      {/* Discrete Replay Button in top-right */}
+      {/* Discrete Replay Button in top-right (positioned below 30px status bar) */}
       <button
         type="button"
         onClick={handleReplay}
         title="Animasyonu Yeniden Oynat"
         aria-label="Animasyonu Yeniden Oynat"
-        className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 text-white/90 flex items-center justify-center transition-all backdrop-blur-xs"
+        className="absolute top-[38px] right-4 z-20 w-8 h-8 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 text-white/90 flex items-center justify-center transition-all backdrop-blur-xs"
       >
         <svg
           viewBox="0 0 24 24"
