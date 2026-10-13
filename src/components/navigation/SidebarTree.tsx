@@ -193,14 +193,6 @@ export function SidebarTree({ selectedPageId, onSelectPage }: SidebarTreeProps) 
         })}
       </div>
 
-      {/* Footer Info */}
-      <div className="p-3 border-t border-zinc-800/80 text-[11px] text-zinc-500 flex items-center justify-between bg-zinc-950/40">
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Figma Senkronize</span>
-        </div>
-        <span className="font-mono text-[10px] text-zinc-500">v2.0</span>
-      </div>
     </aside>
   );
 }
