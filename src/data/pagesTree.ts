@@ -3,7 +3,7 @@ import { SectionNode } from "@/types/navigation";
 export const siteTreeData: SectionNode[] = [
   {
     id: "onboarding-v2",
-    title: "Onboarding v2",
+    title: "Onboarding",
     pages: [
       {
         id: "splash-screen",
