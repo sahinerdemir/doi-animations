@@ -45,8 +45,51 @@ export function SplashScreen({
     <div
       className={`relative w-full h-full bg-[#EF4823] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans ${className}`}
     >
+      {/* Subtle, slow ambient glow animation in background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Primary soft floating light orb */}
+        <motion.div
+          animate={{
+            x: ["-15%", "20%", "-10%", "-15%"],
+            y: ["-15%", "15%", "5%", "-15%"],
+            scale: [1, 1.2, 1.05, 1],
+            opacity: [0.18, 0.3, 0.16, 0.18],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 45%, transparent 70%)",
+          }}
+          className="absolute -top-20 -left-20 w-[380px] h-[380px] rounded-full blur-[80px]"
+        />
+
+        {/* Secondary gentle warm light orb */}
+        <motion.div
+          animate={{
+            x: ["15%", "-15%", "10%", "15%"],
+            y: ["20%", "-10%", "-20%", "20%"],
+            scale: [1.1, 0.95, 1.15, 1.1],
+            opacity: [0.12, 0.24, 0.14, 0.12],
+          }}
+          transition={{
+            duration: 24,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255, 235, 220, 0.45) 0%, rgba(255, 200, 160, 0.15) 50%, transparent 75%)",
+          }}
+          className="absolute -bottom-16 -right-16 w-[360px] h-[360px] rounded-full blur-[90px]"
+        />
+      </div>
+
       {/* 1. Status Bar */}
-      {showStatusBar && <StatusBar time="9:41" className="pt-2" />}
+      {showStatusBar && <StatusBar className="pt-2 z-20" />}
 
       {/* Discrete Replay Button in top-right (positioned below 30px status bar) */}
       <button
@@ -54,7 +97,7 @@ export function SplashScreen({
         onClick={handleReplay}
         title="Animasyonu Yeniden Oynat"
         aria-label="Animasyonu Yeniden Oynat"
-        className="absolute top-[38px] right-4 z-20 w-8 h-8 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 text-white/90 flex items-center justify-center transition-all backdrop-blur-xs"
+        className="absolute top-[38px] right-4 z-20 w-8 h-8 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 text-white/90 flex items-center justify-center transition-all backdrop-blur-xs cursor-pointer"
       >
         <svg
           viewBox="0 0 24 24"
@@ -71,7 +114,7 @@ export function SplashScreen({
       </button>
 
       {/* 2. Hero Vector Artwork with Physics Drop & Wobble Animation (DOİ - Dinle, Oku, İzle) */}
-      <div className="relative flex-1 flex items-center justify-center -mt-2 px-2">
+      <div className="relative flex-1 flex items-center justify-center -mt-2 px-2 z-10">
         <div
           onClick={handleReplay}
           title="Animasyonu yeniden başlatmak için tıkla"
@@ -114,9 +157,9 @@ export function SplashScreen({
             }}
             type="button"
             onClick={onStart}
-            className="w-full h-14 px-8 rounded-full bg-white text-[#EF4823] flex items-center justify-between text-base font-medium shadow-sm transition-all duration-200 hover:bg-white/95 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#EF4823]"
+            className="w-full h-14 px-8 rounded-full bg-white text-[#EF4823] flex items-center justify-between text-base font-semibold shadow-sm transition-all duration-200 hover:bg-white/95 active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#EF4823]"
           >
-            <span>Hadi Başlayalım</span>
+            <span className="font-semibold tracking-[-0.01em]">Hadi Başlayalım</span>
             <ArrowRightIcon className="w-5 h-5 text-[#EF4823]" />
           </motion.button>
 
@@ -132,9 +175,9 @@ export function SplashScreen({
             }}
             type="button"
             onClick={onLogin}
-            className="w-full h-14 px-8 rounded-full bg-white/10 hover:bg-white/15 active:scale-[0.98] text-white flex items-center justify-between text-base font-medium backdrop-blur-[2px] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#EF4823]"
+            className="w-full h-14 px-8 rounded-full bg-white/10 hover:bg-white/15 active:scale-[0.98] text-white flex items-center justify-between text-base font-semibold backdrop-blur-[2px] transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#EF4823]"
           >
-            <span>Giriş Yap</span>
+            <span className="font-semibold tracking-[-0.01em]">Giriş Yap</span>
             <ArrowRightIcon className="w-5 h-5 text-white" />
           </motion.button>
         </div>
