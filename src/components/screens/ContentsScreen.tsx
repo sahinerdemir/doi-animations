@@ -230,9 +230,9 @@ export function ContentsScreen({ onBack, onNext, onSkip }: ContentsScreenProps) 
         </p>
       </div>
 
-      {/* 4. Book Cards List (16 Örnek, Kare Thumbnail ve Sağ Kenar Tick) */}
+      {/* 4. Book Cards List (16 Örnek, Kare Thumbnail, Sağ Kenar Tick, 4px Boşluk) */}
       <div
-        className="flex-1 overflow-y-auto pl-5 pr-6 py-2 pb-28 scrollbar-none space-y-3.5"
+        className="flex-1 overflow-y-auto pl-5 pr-6 py-2 pb-28 scrollbar-none space-y-[4px]"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0px, black 24px, black calc(100% - 64px), transparent 100%)",
