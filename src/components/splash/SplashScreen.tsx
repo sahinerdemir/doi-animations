@@ -45,46 +45,68 @@ export function SplashScreen({
     <div
       className={`relative w-full h-full bg-[#EF4823] text-[#111111] flex flex-col justify-between overflow-hidden select-none font-sans ${className}`}
     >
-      {/* Subtle, slow ambient glow animation in background */}
+      {/* Visible, warm ambient lighting animation in background (Preserves DOI #EF4823 identity) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Primary soft floating light orb */}
+        {/* Deeper rich vermilion depth shadow in bottom-left */}
         <motion.div
           animate={{
-            x: ["-15%", "20%", "-10%", "-15%"],
-            y: ["-15%", "15%", "5%", "-15%"],
-            scale: [1, 1.2, 1.05, 1],
-            opacity: [0.18, 0.3, 0.16, 0.18],
+            x: ["-10%", "15%", "-5%", "-10%"],
+            y: ["10%", "-10%", "15%", "10%"],
+            scale: [1, 1.15, 0.95, 1],
+            opacity: [0.35, 0.55, 0.35, 0.35],
           }}
           transition={{
-            duration: 18,
+            duration: 14,
             repeat: Infinity,
             ease: "easeInOut",
           }}
           style={{
             background:
-              "radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 45%, transparent 70%)",
+              "radial-gradient(circle, rgba(160, 32, 10, 0.6) 0%, rgba(190, 45, 15, 0.25) 50%, transparent 75%)",
           }}
-          className="absolute -top-20 -left-20 w-[380px] h-[380px] rounded-full blur-[80px]"
+          className="absolute -bottom-24 -left-20 w-[420px] h-[420px] rounded-full blur-[70px]"
         />
 
-        {/* Secondary gentle warm light orb */}
+        {/* Primary radiant warm amber-gold light orb (Flows across top-right and center) */}
         <motion.div
           animate={{
-            x: ["15%", "-15%", "10%", "15%"],
-            y: ["20%", "-10%", "-20%", "20%"],
-            scale: [1.1, 0.95, 1.15, 1.1],
-            opacity: [0.12, 0.24, 0.14, 0.12],
+            x: ["-10%", "25%", "5%", "-10%"],
+            y: ["-10%", "20%", "-5%", "-10%"],
+            scale: [1, 1.25, 1.05, 1],
+            opacity: [0.5, 0.8, 0.55, 0.5],
           }}
           transition={{
-            duration: 24,
+            duration: 12,
             repeat: Infinity,
             ease: "easeInOut",
           }}
           style={{
             background:
-              "radial-gradient(circle, rgba(255, 235, 220, 0.45) 0%, rgba(255, 200, 160, 0.15) 50%, transparent 75%)",
+              "radial-gradient(circle, rgba(255, 220, 170, 0.65) 0%, rgba(255, 150, 90, 0.35) 45%, transparent 70%)",
+            mixBlendMode: "screen",
           }}
-          className="absolute -bottom-16 -right-16 w-[360px] h-[360px] rounded-full blur-[90px]"
+          className="absolute -top-16 -right-16 w-[400px] h-[400px] rounded-full blur-[65px]"
+        />
+
+        {/* Secondary soft floating sheen (Illuminates center-left) */}
+        <motion.div
+          animate={{
+            x: ["10%", "-20%", "15%", "10%"],
+            y: ["15%", "-15%", "5%", "15%"],
+            scale: [1.1, 0.9, 1.2, 1.1],
+            opacity: [0.4, 0.65, 0.45, 0.4],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255, 235, 190, 0.55) 0%, rgba(255, 130, 70, 0.25) 50%, transparent 75%)",
+            mixBlendMode: "screen",
+          }}
+          className="absolute top-1/4 -left-20 w-[380px] h-[380px] rounded-full blur-[75px]"
         />
       </div>
 

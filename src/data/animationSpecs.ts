@@ -40,21 +40,19 @@ export const ANIMATION_SPECS: Record<string, ScreenAnimationSpec> = {
     steps: [
       {
         id: "ambient-glow",
-        target: "Arka Plan Ambient Işığı (Aura Glow)",
+        target: "Arka Plan Ambient Işığı (Amber Glow & Vermilion Depth)",
         trigger: "Mount (Otomatik)",
         delayMs: 0,
-        durationMs: "18,000 ms - 24,000 ms",
+        durationMs: "12,000 ms - 16,000 ms",
         easing: "easeInOut (repeat: Infinity)",
         properties: [
-          "x: [-15%, 20%, -10%, -15%]",
-          "y: [-15%, 15%, 5%, -15%]",
-          "scale: [1.0, 1.2, 1.05, 1.0]",
-          "opacity: [0.18, 0.30]",
-          "filter: blur(80px - 90px)",
+          "Amber Orb: opacity [0.50, 0.80], scale [1.0, 1.25], mixBlendMode: screen",
+          "Vermilion Shadow: opacity [0.35, 0.55], scale [1.0, 1.15]",
+          "blur(65px - 75px), kesintisiz pürüzsüz akış",
         ],
         description:
-          "DOİ turuncusu arka plana derinlik katan, gözü yormayan son derece yavaş radyal ışık hareketi.",
-        codeSnippet: `transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}`,
+          "DOİ turuncusu (#EF4823) kimliğini bozmadan sıcak kehribar ışıltısı ve zengin derinlik katan ortam aydınlatması.",
+        codeSnippet: `transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}`,
       },
       {
         id: "hero-drop",
