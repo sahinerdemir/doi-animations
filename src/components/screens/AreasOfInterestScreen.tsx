@@ -183,11 +183,25 @@ export function AreasOfInterestScreen({
   ]);
 
   const [replayKey, setReplayKey] = useState<number>(0);
+  const [shakingIds, setShakingIds] = useState<Record<string, boolean>>({});
 
   const toggleItem = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    const isCurrentlySelected = selectedIds.includes(id);
+    if (!isCurrentlySelected) {
+      // Seçili hale geliyor: hafif titreme (tactile shake) efekti ile seçilsin
+      setShakingIds((prev) => ({ ...prev, [id]: true }));
+      setSelectedIds((prev) => [...prev, id]);
+      setTimeout(() => {
+        setShakingIds((prev) => {
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        });
+      }, 400);
+    } else {
+      // Zaten seçiliydi: seçim kaldırılıyor (titreme olmadan)
+      setSelectedIds((prev) => prev.filter((item) => item !== id));
+    }
   };
 
   const isComplete = selectedIds.length >= 3;
@@ -253,8 +267,10 @@ export function AreasOfInterestScreen({
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3 items-center py-2">
           {INTEREST_ITEMS.map((item) => {
             const isSelected = selectedIds.includes(item.id);
+            const isShaking = Boolean(shakingIds[item.id]);
+
             return (
-              <motion.button
+              <motion.div
                 key={`${item.id}-${replayKey}`}
                 initial={{ opacity: 0, y: 480, rotate: 0 }}
                 animate={{ opacity: 1, y: 0, rotate: item.rotation }}
@@ -263,23 +279,44 @@ export function AreasOfInterestScreen({
                   delay: item.delay,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                whileTap={{ scale: 0.94 }}
-                type="button"
-                onClick={() => toggleItem(item.id)}
-                className={`w-full ${
-                  item.minHeight
-                } rounded-[24px] p-3 flex items-center justify-center text-center transition-colors duration-200 cursor-pointer ${
-                  isSelected
-                    ? "bg-[#EF4823] text-white shadow-md shadow-[#EF4823]/25"
-                    : "bg-white text-[#111111] shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:bg-white/95"
-                }`}
+                className="w-full flex items-center justify-center"
               >
-                <span
-                  className={`${item.fontSize} whitespace-pre-line tracking-tight select-none`}
+                <motion.button
+                  whileTap={{ scale: 0.94 }}
+                  animate={
+                    isShaking
+                      ? {
+                          rotate: [0, -3.5, 3.5, -2, 2, -1, 1, 0],
+                          x: [0, -3.5, 3.5, -2.5, 2.5, -1, 1, 0],
+                          scale: [1, 1.04, 0.97, 1.02, 1],
+                        }
+                      : { rotate: 0, x: 0, scale: 1 }
+                  }
+                  transition={
+                    isShaking
+                      ? {
+                          duration: 0.38,
+                          ease: "easeInOut",
+                        }
+                      : { duration: 0.15 }
+                  }
+                  type="button"
+                  onClick={() => toggleItem(item.id)}
+                  className={`w-full ${
+                    item.minHeight
+                  } rounded-[24px] p-3 flex items-center justify-center text-center transition-colors duration-200 cursor-pointer ${
+                    isSelected
+                      ? "bg-[#EF4823] text-white shadow-md shadow-[#EF4823]/25"
+                      : "bg-white text-[#111111] shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:bg-white/95"
+                  }`}
                 >
-                  {item.label}
-                </span>
-              </motion.button>
+                  <span
+                    className={`${item.fontSize} whitespace-pre-line tracking-tight select-none`}
+                  >
+                    {item.label}
+                  </span>
+                </motion.button>
+              </motion.div>
             );
           })}
         </div>
