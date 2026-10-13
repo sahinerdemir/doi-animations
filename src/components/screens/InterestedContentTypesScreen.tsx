@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StatusBar } from "@/components/splash/StatusBar";
 import {
   ChevronLeft,
@@ -73,51 +73,54 @@ export function InterestedContentTypesScreen({
     lastYRef.current = e.clientY;
     lastTimeRef.current = performance.now();
     velocityRef.current = 0;
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {}
   };
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
-    const now = performance.now();
-    const dt = Math.max(1, now - lastTimeRef.current);
-    const dy = e.clientY - lastYRef.current;
-    velocityRef.current = dy / dt; // px / ms
-    lastYRef.current = e.clientY;
-    lastTimeRef.current = now;
+  useEffect(() => {
+    const handleGlobalPointerMove = (e: PointerEvent) => {
+      if (!isDraggingRef.current) return;
+      const totalDy = e.clientY - startYRef.current;
+      if (Math.abs(totalDy) > 5) {
+        hasDraggedRef.current = true;
+      }
 
-    const totalDy = e.clientY - startYRef.current;
-    if (Math.abs(totalDy) > 6) {
-      hasDraggedRef.current = true;
-    }
+      const now = performance.now();
+      const dt = Math.max(1, now - lastTimeRef.current);
+      const dy = e.clientY - lastYRef.current;
+      velocityRef.current = dy / dt;
+      lastYRef.current = e.clientY;
+      lastTimeRef.current = now;
 
-    // Her 50px dikey sürükleme 1 kart adımı ilerletir
-    const newOffset = startOffsetRef.current - totalDy / 50;
-    setOffset(newOffset);
-  };
+      // 62px dikey hareket = 1 kart adımı
+      const newOffset = startOffsetRef.current - totalDy / 62;
+      setOffset(newOffset);
+    };
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
+    const handleGlobalPointerUp = () => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
 
-    if (hasDraggedRef.current) {
-      // Sürükleme bittiğinde atalet hızıyla en yakın karta yay (spring) ile oturur
-      const momentum = velocityRef.current * 65;
-      const target = Math.round(offset - momentum / 50);
+      if (hasDraggedRef.current) {
+        // Sürükleme sonlandığında en yakın karta yay (spring) ile oturur
+        const momentum = velocityRef.current * 75;
+        const target = Math.round(offset - momentum / 62);
 
-      animationControlsRef.current = animate(offset, target, {
-        type: "spring",
-        stiffness: 340,
-        damping: 28,
-        mass: 0.8,
-        onUpdate: (latest) => setOffset(latest),
-      });
-    }
-  };
+        animationControlsRef.current = animate(offset, target, {
+          type: "spring",
+          stiffness: 340,
+          damping: 28,
+          mass: 0.8,
+          onUpdate: (latest) => setOffset(latest),
+        });
+      }
+    };
+
+    window.addEventListener("pointermove", handleGlobalPointerMove);
+    window.addEventListener("pointerup", handleGlobalPointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handleGlobalPointerMove);
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
+    };
+  }, [offset]);
 
   // Fare tekerleğiyle (wheel) yukarı-aşağı çevirme
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
@@ -240,9 +243,6 @@ export function InterestedContentTypesScreen({
       <div className="flex-1 w-full relative flex items-center justify-center pb-[96px] overflow-hidden select-none z-10">
         <div
           onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
           onWheel={handleWheel}
           className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
         >
@@ -250,8 +250,9 @@ export function InterestedContentTypesScreen({
             const IconComp = card.item.icon;
 
             return (
-              <div
+              <button
                 key={card.k}
+                type="button"
                 onClick={() => handleCardClick(card.k, card.item.id)}
                 style={{
                   position: "absolute",
@@ -262,7 +263,7 @@ export function InterestedContentTypesScreen({
                   zIndex: card.zIndex,
                   transformOrigin: "center center",
                 }}
-                className="w-[310px] max-w-[88%] cursor-pointer transition-[box-shadow,background-color] duration-150"
+                className="w-[310px] max-w-[88%] cursor-pointer focus:outline-none transition-[box-shadow,background-color] duration-150"
               >
                 <div
                   className={`w-full h-[60px] sm:h-[64px] rounded-full px-6 flex items-center gap-4 select-none transition-all duration-200 ${
@@ -285,7 +286,7 @@ export function InterestedContentTypesScreen({
                     <CheckCircle2 className="w-5 h-5 text-white stroke-[2.2] shrink-0 ml-auto" />
                   )}
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
