@@ -44,15 +44,21 @@ export function DeviceFrame({
   };
 
   return (
-    <div className="relative flex-1 h-screen bg-[#0A0B0E] flex items-center justify-center overflow-auto p-2 sm:p-4">
-      {/* Top-Right Control Buttons */}
+    <div className="relative flex-1 h-screen bg-[#0A0B0E] flex items-center justify-center overflow-auto p-3 sm:p-5 select-none">
+      {/* Top-Right Control Buttons & Dimension Indicator */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        {/* Exact Figma Ratio Indicator */}
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 backdrop-blur-md text-xs font-mono text-zinc-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#EF4823]" />
+          <span>394 × 853 px</span>
+        </div>
+
         {/* Toggle Compare Mode (if reference image available) */}
         {referenceImage && (
           <button
             type="button"
             onClick={() => setIsCompareMode(!isCompareMode)}
-            title={isCompareMode ? "Normal Görünüme Dön" : "Figma ile Yan Yana Karşılaştır"}
+            title={isCompareMode ? "Tekli Görünüme Dön" : "Figma ile Yan Yana Karşılaştır"}
             className={`p-2.5 rounded-full border backdrop-blur-md shadow-xl transition-all hover:scale-105 active:scale-95 ${
               isCompareMode
                 ? "bg-[#EF4823] text-white border-[#EF4823]"
@@ -80,28 +86,28 @@ export function DeviceFrame({
 
       {/* Main View Area */}
       {!isCompareMode ? (
-        /* Single Centered Mockup Frame */
-        <div className="relative h-[min(852px,calc(100vh-2.5rem))] aspect-[394/852] max-w-full p-2.5 sm:p-3 bg-zinc-900/90 border-[3.5px] border-zinc-700/90 rounded-[52px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10 flex items-center justify-center transition-all duration-300">
-          {/* Dynamic Island Pill */}
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 pointer-events-none flex items-center justify-end pr-2.5">
+        /* Single Centered Mockup Frame: Exactly 394 x 853 Aspect Ratio */
+        <div className="relative h-[min(853px,calc(100vh-2.5rem))] aspect-[394/853] w-auto max-w-full rounded-[40px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/15 border-[3px] border-zinc-800/90 overflow-hidden bg-black flex items-center justify-center transition-all duration-200">
+          {/* Dynamic Island Pill (iPhone style, matching 394x853 screen) */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 pointer-events-none flex items-center justify-end pr-2.5 shadow-sm">
             <div className="w-2.5 h-2.5 rounded-full bg-[#121623] border border-zinc-800/80" />
           </div>
 
-          {/* Screen Content Wrapper */}
-          <div className="w-full h-full rounded-[42px] overflow-hidden bg-black relative">
+          {/* Screen Canvas (Exact 394x853 Canvas) */}
+          <div className="w-full h-full relative overflow-hidden bg-black">
             {children}
           </div>
         </div>
       ) : (
-        /* Side-by-Side Comparison Mode */
-        <div className="flex flex-wrap items-center justify-center gap-6 max-w-5xl py-8">
+        /* Side-by-Side Comparison Mode: Both with Exact 394x853 Aspect Ratio */
+        <div className="flex flex-wrap items-center justify-center gap-6 max-w-6xl py-8">
           {/* Left: Code implementation */}
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-2 bg-emerald-950/60 border border-emerald-800/40 px-3 py-1 rounded-full">
-              Kodlanan Ekran (Next.js / React)
+              Kodlanan Ekran (394 × 853 px)
             </span>
-            <div className="relative h-[min(780px,calc(100vh-6rem))] aspect-[394/852] p-2.5 bg-zinc-900 border-[3px] border-zinc-700 rounded-[46px] shadow-2xl overflow-hidden">
-              <div className="w-full h-full rounded-[38px] overflow-hidden bg-black">
+            <div className="relative h-[min(760px,calc(100vh-6rem))] aspect-[394/853] w-auto rounded-[40px] border-[3px] border-zinc-800 shadow-2xl overflow-hidden bg-black ring-1 ring-white/10">
+              <div className="w-full h-full relative overflow-hidden">
                 {children}
               </div>
             </div>
@@ -110,15 +116,15 @@ export function DeviceFrame({
           {/* Right: Figma Screenshot */}
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-[#EF4823] mb-2 bg-[#EF4823]/10 border border-[#EF4823]/30 px-3 py-1 rounded-full">
-              Figma Orijinal Tasarım
+              Figma Orijinal Tasarım (394 × 853 px)
             </span>
-            <div className="relative h-[min(780px,calc(100vh-6rem))] aspect-[394/852] p-2.5 bg-zinc-900 border-[3px] border-zinc-700 rounded-[46px] shadow-2xl overflow-hidden">
-              <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-black">
+            <div className="relative h-[min(760px,calc(100vh-6rem))] aspect-[394/853] w-auto rounded-[40px] border-[3px] border-zinc-800 shadow-2xl overflow-hidden bg-black ring-1 ring-white/10">
+              <div className="relative w-full h-full overflow-hidden">
                 <Image
                   src={referenceImage!}
                   alt={pageTitle || "Figma Referansı"}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                 />
               </div>
             </div>
