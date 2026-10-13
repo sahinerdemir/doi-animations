@@ -2,20 +2,25 @@
 
 import React, { useState } from "react";
 import { SplashScreen } from "@/components/splash/SplashScreen";
+import { LoginScreen } from "@/components/screens/LoginScreen";
+import { ForgotPasswordScreen } from "@/components/screens/ForgotPasswordScreen";
+import { AreasOfInterestScreen } from "@/components/screens/AreasOfInterestScreen";
+import { InterestedContentTypesScreen } from "@/components/screens/InterestedContentTypesScreen";
+import { ContentsScreen } from "@/components/screens/ContentsScreen";
+import { PersonalizationScreen } from "@/components/screens/PersonalizationScreen";
+import { PersonalizationDoneScreen } from "@/components/screens/PersonalizationDoneScreen";
+import { RegisterNonKonyaScreen } from "@/components/screens/RegisterNonKonyaScreen";
+import { RegisterKonyaliStep4Screen } from "@/components/screens/RegisterKonyaliStep4Screen";
+import { RegisterKonyaliStep5Screen } from "@/components/screens/RegisterKonyaliStep5Screen";
+import { MembershipPlansScreen } from "@/components/screens/MembershipPlansScreen";
 import { DeviceFrame } from "@/components/common/DeviceFrame";
 import { SidebarTree } from "@/components/navigation/SidebarTree";
 import { siteTreeData } from "@/data/pagesTree";
 import { PageNode } from "@/types/navigation";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomePage() {
-  const [selectedPage, setSelectedPage] = useState<PageNode>(
-    siteTreeData[0]?.pages[0] || {
-      id: "splash-screen",
-      title: "Splash Screen",
-      status: "completed",
-    }
-  );
+  const [selectedPageId, setSelectedPageId] = useState<string>("splash-screen");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -23,63 +28,123 @@ export default function HomePage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const handleStart = () => {
-    showToast("Hadi Başlayalım tıklandı → 'Login' ekranına geçiliyor...");
-    const loginPage = siteTreeData[0]?.pages.find((p) => p.id === "login");
-    if (loginPage) {
-      setSelectedPage(loginPage);
-    }
+  const navigateTo = (pageId: string, toast?: string) => {
+    setSelectedPageId(pageId);
+    if (toast) showToast(toast);
   };
 
-  const handleLogin = () => {
-    showToast("Giriş Yap tıklandı → 'Login' ekranına geçiliyor...");
-    const loginPage = siteTreeData[0]?.pages.find((p) => p.id === "login");
-    if (loginPage) {
-      setSelectedPage(loginPage);
-    }
-  };
-
-  const renderActiveScreen = () => {
-    switch (selectedPage.id) {
+  const renderCurrentScreen = () => {
+    switch (selectedPageId) {
       case "splash-screen":
         return (
           <SplashScreen
-            onStart={handleStart}
-            onLogin={handleLogin}
+            onStart={() => navigateTo("areas-of-interest", "İlgi alanları seçimine geçildi.")}
+            onLogin={() => navigateTo("login", "Giriş ekranına geçildi.")}
             showStatusBar={true}
+          />
+        );
+
+      case "login":
+        return (
+          <LoginScreen
+            onBack={() => navigateTo("splash-screen")}
+            onForgotPassword={() => navigateTo("forgot-password")}
+            onRegister={() => navigateTo("register-non-konya")}
+            onSuccess={() => navigateTo("personalization-done", "Başarıyla giriş yapıldı!")}
+          />
+        );
+
+      case "forgot-password":
+        return (
+          <ForgotPasswordScreen
+            onBack={() => navigateTo("login")}
+            onSuccess={() => navigateTo("login", "Şifreniz güncellendi, giriş yapabilirsiniz.")}
+          />
+        );
+
+      case "areas-of-interest":
+        return (
+          <AreasOfInterestScreen
+            onBack={() => navigateTo("splash-screen")}
+            onNext={() => navigateTo("interested-content-types")}
+            onSkip={() => navigateTo("interested-content-types")}
+          />
+        );
+
+      case "interested-content-types":
+        return (
+          <InterestedContentTypesScreen
+            onBack={() => navigateTo("areas-of-interest")}
+            onNext={() => navigateTo("contents")}
+            onSkip={() => navigateTo("contents")}
+          />
+        );
+
+      case "contents":
+        return (
+          <ContentsScreen
+            onBack={() => navigateTo("interested-content-types")}
+            onNext={() => navigateTo("personalization")}
+            onSkip={() => navigateTo("personalization")}
+          />
+        );
+
+      case "personalization":
+        return (
+          <PersonalizationScreen
+            onComplete={() => navigateTo("personalization-done", "Kütüphanen hazırlandı!")}
+          />
+        );
+
+      case "personalization-done":
+        return (
+          <PersonalizationDoneScreen
+            onJoin={() => navigateTo("membership-plans")}
+            onExplore={() => navigateTo("membership-plans")}
+          />
+        );
+
+      case "register-non-konya":
+        return (
+          <RegisterNonKonyaScreen
+            onBack={() => navigateTo("login")}
+            onLogin={() => navigateTo("login")}
+            onSuccess={() => navigateTo("membership-plans", "Kaydınız oluşturuldu!")}
+          />
+        );
+
+      case "register-konyali-step4":
+        return (
+          <RegisterKonyaliStep4Screen
+            onBack={() => navigateTo("register-non-konya")}
+            onNext={() => navigateTo("register-konyali-step5", "KMK üyeliğiniz doğrulandı!")}
+            onSkip={() => navigateTo("membership-plans")}
+          />
+        );
+
+      case "register-konyali-step5":
+        return (
+          <RegisterKonyaliStep5Screen
+            onBack={() => navigateTo("register-konyali-step4")}
+            onSuccess={() => navigateTo("personalization-done", "1 Yıllık ücretsiz üyeliğiniz başladı!")}
+          />
+        );
+
+      case "membership-plans":
+        return (
+          <MembershipPlansScreen
+            onBack={() => navigateTo("personalization-done")}
+            onSuccess={() => navigateTo("splash-screen", "7 Günlük deneme süreniz başladı!")}
+            onSkip={() => navigateTo("splash-screen")}
           />
         );
 
       default:
         return (
-          <div className="w-full h-full bg-[#111111] text-white flex flex-col items-center justify-center p-6 text-center select-none">
-            <div className="w-14 h-14 rounded-2xl bg-[#EF4823]/20 border border-[#EF4823]/40 flex items-center justify-center mb-4">
-              <Sparkles className="w-7 h-7 text-[#EF4823]" />
-            </div>
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-[#EF4823] bg-[#EF4823]/10 px-3 py-1 rounded-full mb-3">
-              {selectedPage.badge || "Sırada"}
-            </span>
-            <h3 className="text-xl font-bold mb-2">{selectedPage.title}</h3>
-            <p className="text-xs text-zinc-400 max-w-xs mb-6">
-              {selectedPage.description ||
-                "Bu ekran için kodlama hazır. Sıradaki talimatınızla kodlanacak."}
-            </p>
-            {selectedPage.nodeId && (
-              <div className="text-[11px] font-mono text-zinc-500 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800 mb-6">
-                Figma Node: #{selectedPage.nodeId}
-              </div>
-            )}
-            <button
-              onClick={() => {
-                const splash = siteTreeData[0]?.pages[0];
-                if (splash) setSelectedPage(splash);
-              }}
-              className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors"
-            >
-              <span>Splash Screen ekranına dön</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <SplashScreen
+            onStart={() => navigateTo("areas-of-interest")}
+            onLogin={() => navigateTo("login")}
+          />
         );
     }
   };
@@ -88,15 +153,28 @@ export default function HomePage() {
     <div className="w-screen h-screen flex overflow-hidden bg-[#0A0B0E]">
       {/* 1. Left Vertical Site Tree Sidebar */}
       <SidebarTree
-        selectedPageId={selectedPage.id}
-        onSelectPage={(page) => {
-          setSelectedPage(page);
-          showToast(`'${page.title}' ekranı seçildi.`);
+        selectedPageId={selectedPageId}
+        onSelectPage={(page: PageNode) => {
+          setSelectedPageId(page.id);
+          showToast(`'${page.title}' ekranına geçildi.`);
         }}
       />
 
       {/* 2. Center Viewport with Scaled Mockup & Top-Right Fullscreen Icon */}
-      <DeviceFrame>{renderActiveScreen()}</DeviceFrame>
+      <DeviceFrame>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedPageId}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="w-full h-full"
+          >
+            {renderCurrentScreen()}
+          </motion.div>
+        </AnimatePresence>
+      </DeviceFrame>
 
       {/* Floating Action Toast Notification */}
       {toastMessage && (
