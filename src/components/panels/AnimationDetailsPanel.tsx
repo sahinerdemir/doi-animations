@@ -63,7 +63,7 @@ export function AnimationDetailsPanel({
       <div className="p-4 border-b border-zinc-800/80 flex items-center justify-between gap-3 bg-zinc-950/60">
         <div className="min-w-0">
           <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
-            {spec.title} Animation Guide
+            {spec.title} Animasyon Rehberi
           </h3>
           <p className="text-[11px] text-zinc-400 mt-0.5 flex items-center gap-1.5 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-[#EF4823]" />

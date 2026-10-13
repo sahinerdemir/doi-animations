@@ -78,7 +78,7 @@ export function SidebarTree({ selectedPageId, onSelectPage }: SidebarTreeProps) 
           </div>
           <div>
             <h2 className="text-sm font-semibold tracking-wide text-zinc-100">
-              DOİ Animation Guide
+              DOİ Animasyon Rehberi
             </h2>
             <p className="text-[11px] text-zinc-500">Sayfalar & Bileşenler</p>
           </div>
